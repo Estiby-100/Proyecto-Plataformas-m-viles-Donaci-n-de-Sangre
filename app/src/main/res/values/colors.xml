@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Confianza Cálida - referencia de paleta (la fuente real vive en ui/theme/Color.kt) -->
     <color name="coral_accent">#FFE85D4A</color>
     <color name="coral_action">#FFC94332</color>
     <color name="teal_accent">#FF2A9D8F</color>

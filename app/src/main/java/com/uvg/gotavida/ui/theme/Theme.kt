@@ -9,16 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-/**
- * Radios de "Confianza Cálida" expuestos como MaterialTheme.shapes, para que ninguna
- * pantalla tenga que escribir un RoundedCornerShape a mano.
- *
- *  extraSmall -> chips/badges (pastilla)
- *  small      -> inputs (12dp)
- *  medium     -> botones (16dp)
- *  large      -> tarjetas (20dp)
- *  extraLarge -> hojas inferiores / diálogos (28dp)
- */
 val GotaVidaShapes = Shapes(
     extraSmall = RoundedCornerShape(percent = 50),
     small = RoundedCornerShape(12.dp),

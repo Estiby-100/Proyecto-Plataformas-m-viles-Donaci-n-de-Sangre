@@ -23,14 +23,6 @@ import com.uvg.gotavida.data.model.SolicitudDonacion
 import com.uvg.gotavida.data.model.TipoPublicacion
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 
-/**
- * Tarjeta de solicitud/jornada reutilizada en el feed de Home (pantalla 6) y,
- * en su variante compacta (sin botón), en la Confirmación (pantalla 9).
- *
- * El botón cambia de texto según el tipo de publicación: una solicitud de
- * sangre lleva a su Detalle ("Ver detalle"); una jornada lleva al Mapa
- * ("Ver en mapa"), nunca al Detalle de una solicitud puntual.
- */
 @Composable
 fun SolicitudCard(
     solicitud: SolicitudDonacion,

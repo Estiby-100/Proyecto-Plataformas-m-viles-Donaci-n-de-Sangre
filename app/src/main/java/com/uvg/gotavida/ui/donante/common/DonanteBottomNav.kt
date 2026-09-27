@@ -13,11 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-/**
- * Las tres pantallas que llevan bottom navigation en el flujo del donante.
- * Detalle, Cuestionario y Confirmación son pantallas de flujo (con botón
- * atrás/X) y no usan esta barra.
- */
 enum class DonanteTab {
     HOME,
     MAPA,

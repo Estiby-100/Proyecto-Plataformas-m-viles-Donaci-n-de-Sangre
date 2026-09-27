@@ -62,12 +62,6 @@ enum class EstadoFeed {
     CON_CONTENIDO
 }
 
-/**
- * Route de Home: obtiene los datos (fake por ahora) y guarda el estado de UI
- * puramente visual (filtro seleccionado, disponibilidad). No hay navegación
- * real todavía: los callbacks quedan vacíos o solo imprimen, listos para
- * conectarse en la siguiente entrega.
- */
 @Composable
 fun HomeDonanteRoute(
     modifier: Modifier = Modifier

@@ -52,11 +52,6 @@ enum class VistaCuestionario {
     RESULTADO_NO_APTO
 }
 
-/**
- * Route del cuestionario. Solo mantiene estado visual (qué pregunta se está
- * mostrando, cuál respuesta está seleccionada); no hay lógica real de
- * elegibilidad ni navegación entre pantallas todavía.
- */
 @Composable
 fun CuestionarioRoute(
     modifier: Modifier = Modifier

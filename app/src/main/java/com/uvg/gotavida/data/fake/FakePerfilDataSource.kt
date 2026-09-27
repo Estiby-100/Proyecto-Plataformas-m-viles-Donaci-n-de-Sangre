@@ -4,9 +4,6 @@ import com.uvg.gotavida.data.model.EstadoHistorial
 import com.uvg.gotavida.data.model.Insignia
 import com.uvg.gotavida.data.model.ItemHistorial
 
-/**
- * Fuente de datos "fake" del Perfil del donante (pantalla 11).
- */
 object FakePerfilDataSource {
 
     fun obtenerHistorial(): List<ItemHistorial> = listOf(

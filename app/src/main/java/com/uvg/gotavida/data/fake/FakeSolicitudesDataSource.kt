@@ -4,11 +4,6 @@ import com.uvg.gotavida.data.model.NivelUrgencia
 import com.uvg.gotavida.data.model.SolicitudDonacion
 import com.uvg.gotavida.data.model.TipoPublicacion
 
-/**
- * Fuente de datos "fake" para el feed de Home y el Detalle de solicitud.
- * En una siguiente fase esto se reemplaza por una llamada real a un API o a
- * almacenamiento local; por ahora solo simula la forma que tendrán los datos.
- */
 object FakeSolicitudesDataSource {
 
     fun obtenerSolicitudesUrgentesCompatibles(): List<SolicitudDonacion> = listOf(

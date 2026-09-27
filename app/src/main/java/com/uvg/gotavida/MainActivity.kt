@@ -14,12 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 
-/**
- * Punto de entrada de la app. En esta fase (solo vistas, sin navegación ni lógica)
- * no hay un grafo de navegación real todavía: cada pantalla se revisa por su
- * propio @Preview en Android Studio. La navegación entre las pantallas de los
- * tres integrantes se cablea en la siguiente entrega.
- */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

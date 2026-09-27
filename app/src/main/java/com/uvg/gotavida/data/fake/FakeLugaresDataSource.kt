@@ -3,9 +3,6 @@ package com.uvg.gotavida.data.fake
 import com.uvg.gotavida.data.model.LugarMapa
 import com.uvg.gotavida.data.model.TipoPublicacion
 
-/**
- * Fuente de datos "fake" para el Mapa de bancos de sangre y jornadas (pantalla 10).
- */
 object FakeLugaresDataSource {
 
     fun obtenerLugaresCercanos(): List<LugarMapa> = listOf(

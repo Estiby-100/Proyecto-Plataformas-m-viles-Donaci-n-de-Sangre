@@ -51,13 +51,6 @@ import com.uvg.gotavida.data.fake.FakeLugaresDataSource
 import com.uvg.gotavida.data.model.LugarMapa
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 
-/**
- * Pantalla 10: Mapa de bancos de sangre y jornadas cercanas.
- *
- * Esta fase no integra un SDK de mapas real: el "mapa" es una superficie
- * dibujada con las posiciones relativas de [LugarMapa] únicamente para
- * mostrar la disposición visual esperada.
- */
 private enum class VistaMapa { MAPA, LISTA }
 
 @Composable

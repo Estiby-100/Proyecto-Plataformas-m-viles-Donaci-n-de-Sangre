@@ -43,14 +43,6 @@ import com.uvg.gotavida.ui.donante.common.DialogoContactoInstitucion
 import com.uvg.gotavida.ui.donante.common.SolicitudCard
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 
-/**
- * Pantalla 9: Confirmación de coincidencia/disponibilidad. Se llega aquí
- * después de responder el Cuestionario (8) y ser considerado elegible.
- *
- * Tiene DOS diálogos distintos que nunca deben confundirse:
- *  - "Contactar institución" (reutiliza [DialogoContactoInstitucion]).
- *  - "Cancelar mi participación" (diálogo propio, con su propia confirmación).
- */
 @Composable
 fun ConfirmacionRoute(
     modifier: Modifier = Modifier

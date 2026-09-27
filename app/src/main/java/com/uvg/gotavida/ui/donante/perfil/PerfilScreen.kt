@@ -50,13 +50,6 @@ import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.WarningAccessible
 import com.uvg.gotavida.ui.theme.WarningContainer
 
-/**
- * Pantalla 11: Perfil del donante.
- *
- * El switch de disponibilidad es conceptualmente el mismo estado que el de
- * Home (pantalla 6); en esta fase de solo vistas cada pantalla mantiene su
- * propio estado local, sin fuente de verdad compartida todavía.
- */
 @Composable
 fun PerfilRoute(
     modifier: Modifier = Modifier

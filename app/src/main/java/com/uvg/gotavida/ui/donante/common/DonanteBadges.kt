@@ -16,11 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.uvg.gotavida.data.model.NivelUrgencia
 
-/**
- * Badge de tipo de sangre. Usa siempre el par contenedor/on-contenedor
- * (fondo suave + texto oscuro accesible), nunca el coral saturado con texto
- * blanco pequeño encima.
- */
 @Composable
 fun BadgeTipoSangre(
     tipoSangre: String,
@@ -40,9 +35,6 @@ fun BadgeTipoSangre(
     }
 }
 
-/**
- * Chip de urgencia ("Urgente" en coral suave, "Programada"/"Jornada" en teal).
- */
 @Composable
 fun ChipUrgencia(
     urgencia: NivelUrgencia,
@@ -80,10 +72,6 @@ fun ChipUrgencia(
     }
 }
 
-/**
- * Insignia "Verificado" junto al nombre de una institución. Se reutiliza en
- * la tarjeta de Home, el Detalle y la Confirmación.
- */
 @Composable
 fun BadgeVerificado(
     modifier: Modifier = Modifier
@@ -106,7 +94,6 @@ fun BadgeVerificado(
     }
 }
 
-/** Ícono circular de institución (placeholder mientras no hay logos reales). */
 @Composable
 fun IconoInstitucion(
     modifier: Modifier = Modifier

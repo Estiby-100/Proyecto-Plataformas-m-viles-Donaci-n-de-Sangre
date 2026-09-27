@@ -6,18 +6,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-/**
- * Escala tipográfica de "Confianza Cálida" (headlineSmall = Display, titleLarge = H2,
- * bodyMedium = Body, labelSmall = Caption, labelLarge = texto de botón).
- *
- * El diseño original en Figma pide Poppins SemiBold para títulos e Inter para
- * cuerpo/botones. Este proyecto usa la familia tipográfica por defecto del sistema
- * (Roboto en Android) porque no hay archivos de fuente de Poppins/Inter empaquetados
- * en el repositorio; solo cambia la familia, no los tamaños, pesos ni interlineado
- * del sistema visual. Si el equipo quiere las fuentes exactas, se pueden agregar
- * como Google Fonts descargables (androidx.compose.ui.text.googlefonts) sin tocar
- * el resto de las pantallas.
- */
 val Typography = Typography(
     headlineSmall = TextStyle(
         fontFamily = FontFamily.Default,
