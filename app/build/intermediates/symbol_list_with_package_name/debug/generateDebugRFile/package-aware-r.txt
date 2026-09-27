@@ -1,0 +1,23 @@
+com.uvg.gotavida
+color background
+color black
+color border
+color coral_accent
+color coral_action
+color error_accessible
+color success_accessible
+color surface
+color surface_alt
+color teal_accent
+color teal_accessible
+color text_primary
+color text_secondary
+color white
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+style Theme_GotaVida
+xml backup_rules
+xml data_extraction_rules
