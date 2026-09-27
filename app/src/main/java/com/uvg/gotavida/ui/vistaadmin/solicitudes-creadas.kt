@@ -24,7 +24,6 @@ import com.uvg.gotavida.ui.theme.CoralAction
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.SuccessAccessible
 
-// Modelo de una solicitud creada
 data class SolicitudCreada(
     val nombre: String,
     val ubicacion: String,
@@ -38,8 +37,6 @@ fun SolicitudesCreadasScreen(
     onCerrarSolicitud: (SolicitudCreada) -> Unit = {},
     onAsignarSolicitud: (SolicitudCreada) -> Unit = {}
 ) {
-    // Lista vacía por defecto.
-    // Aquí posteriormente se pueden colocar los datos de la base de datos.
     val solicitudes: List<SolicitudCreada> = emptyList()
 
     Scaffold(
@@ -49,9 +46,6 @@ fun SolicitudesCreadasScreen(
                 onBackClick = onBackClick
             )
         },
-        bottomBar = {
-            SolicitudesBottomNavBar()
-        }
     ) { padding ->
 
         if (solicitudes.isEmpty()) {
@@ -206,7 +200,6 @@ private fun SolicitudCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                // Círculo con el tipo de sangre
                 Box(
                     modifier = Modifier
                         .size(44.dp)
@@ -308,61 +301,6 @@ private fun SolicitudCard(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun SolicitudesBottomNavBar() {
-
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface
-    ) {
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = {
-                Icon(
-                    imageVector = Icons.Filled.Home,
-                    contentDescription = "Inicio"
-                )
-            },
-            label = {
-                Text("Inicio")
-            }
-        )
-
-        NavigationBarItem(
-            selected = true,
-            onClick = {},
-            icon = {
-                Icon(
-                    imageVector = Icons.Filled.Notifications,
-                    contentDescription = "Alertas"
-                )
-            },
-            label = {
-                Text("Alertas")
-            },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = MaterialTheme.colorScheme.primary,
-                selectedTextColor = MaterialTheme.colorScheme.primary
-            )
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "Ajustes"
-                )
-            },
-            label = {
-                Text("Ajustes")
-            }
-        )
     }
 }
 

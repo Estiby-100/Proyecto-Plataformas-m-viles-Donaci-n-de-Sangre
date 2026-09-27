@@ -37,14 +37,12 @@ fun SolicitudCreadaScreen(
                 .padding(horizontal = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-            // Barra superior decorativa
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .width(64.dp)
                     .height(4.dp)
                     .clip(RoundedCornerShape(50))
-                    // Antes: extended.track
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             )
 
@@ -76,7 +74,6 @@ fun SolicitudCreadaScreen(
                     text = "Volver al dashboard",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
-                    // Antes: extended.green
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.clickable { onVolverAlDashboard() }
                 )
@@ -91,45 +88,6 @@ private fun SuccessBadge() {
         modifier = Modifier.size(120.dp),
         contentAlignment = Alignment.Center
     ) {
-        // Destellos decorativos alrededor del círculo.
-        // Antes: extended.sparkle. Uso 'outline' (gris suave) para que
-        // no compitan visualmente con el verde del círculo central.
-        Icon(
-            Icons.Filled.AutoAwesome,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.outline,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .size(16.dp)
-        )
-        Icon(
-            Icons.Filled.AutoAwesome,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.outline,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .size(12.dp)
-        )
-        Icon(
-            Icons.Filled.AutoAwesome,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.outline,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .size(12.dp)
-        )
-        Icon(
-            Icons.Filled.AutoAwesome,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.outline,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(16.dp)
-        )
-
-        // Anillo exterior claro.
-        // Antes: extended.successRingBackground -> tu tema ya trae
-        // tertiaryContainer (SuccessContainer), pensado justo para esto.
         Box(
             modifier = Modifier
                 .size(88.dp)
@@ -137,8 +95,6 @@ private fun SuccessBadge() {
                 .background(MaterialTheme.colorScheme.tertiaryContainer),
             contentAlignment = Alignment.Center
         ) {
-            // Círculo sólido con check.
-            // Antes: extended.green
             Box(
                 modifier = Modifier
                     .size(56.dp)

@@ -21,14 +21,12 @@ import com.uvg.gotavida.ui.theme.GotaVidaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NuevaSolicitudScreen(
+fun NuevaSolicitud(
     onBackClick: () -> Unit = {},
     onEnviarClick: (SolicitudFormState) -> Unit = {}
 ) {
-    // Todos los campos inician vacíos: el formulario no trae ningún valor
-    // precargado, solo se ve el placeholder hasta que el usuario elige/escribe.
-    var nombreCompleto by remember { mutableStateOf("") }
-    var tipoSangre by remember { mutableStateOf("") }
+    var nombre by remember { mutableStateOf("") }
+    var sangre by remember { mutableStateOf("") }
     var signo by remember { mutableStateOf("") }
     var departamento by remember { mutableStateOf("") }
     var detalles by remember { mutableStateOf("") }
@@ -71,8 +69,8 @@ fun NuevaSolicitudScreen(
 
             FormLabel("Nombre completo")
             FormTextField(
-                value = nombreCompleto,
-                onValueChange = { nombreCompleto = it },
+                value = nombre,
+                onValueChange = { nombre = it },
                 placeholder = "Ej. Juan Pérez"
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -81,10 +79,10 @@ fun NuevaSolicitudScreen(
                 Column(modifier = Modifier.weight(1f)) {
                     FormLabel("Tipo de sangre")
                     FormDropdown(
-                        selected = tipoSangre,
+                        selected = sangre,
                         placeholder = "Selecciona",
                         options = listOf("O", "A", "B", "AB"),
-                        onSelected = { tipoSangre = it }
+                        onSelected = { sangre = it }
                     )
                 }
                 Spacer(modifier = Modifier.width(12.dp))
@@ -124,8 +122,8 @@ fun NuevaSolicitudScreen(
                 onClick = {
                     onEnviarClick(
                         SolicitudFormState(
-                            nombreCompleto = nombreCompleto,
-                            tipoSangre = tipoSangre,
+                            nombreCompleto = nombre,
+                            tipoSangre = sangre,
                             signo = signo,
                             departamento = departamento,
                             detalles = detalles
@@ -170,8 +168,6 @@ data class SolicitudFormState(
 private fun InfoBanner() {
     Card(
         shape = RoundedCornerShape(16.dp),
-        // Antes: extended.infoCardBackground. Tu tema real ya tiene un tono
-        // rosado/coral claro pensado justo para esto: primaryContainer.
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -233,7 +229,6 @@ private fun FormTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        // Antes: extended.placeholderText
         placeholder = { Text(placeholder, color = MaterialTheme.colorScheme.onSurfaceVariant) },
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
@@ -241,7 +236,6 @@ private fun FormTextField(
             focusedContainerColor = MaterialTheme.colorScheme.surface,
             unfocusedContainerColor = MaterialTheme.colorScheme.surface,
             focusedBorderColor = MaterialTheme.colorScheme.primary,
-            // Antes: extended.fieldBorder
             unfocusedBorderColor = MaterialTheme.colorScheme.outline,
             focusedTextColor = MaterialTheme.colorScheme.onSurface,
             unfocusedTextColor = MaterialTheme.colorScheme.onSurface
@@ -335,6 +329,6 @@ private fun FormDropdown(
 @Composable
 fun NuevaSolicitudScreenPreview() {
     GotaVidaTheme {
-        NuevaSolicitudScreen()
+        NuevaSolicitud()
     }
 }

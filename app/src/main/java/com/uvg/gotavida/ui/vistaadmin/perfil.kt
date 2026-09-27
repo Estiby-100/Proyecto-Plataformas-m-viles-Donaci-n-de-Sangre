@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 
-data class PerfilInstitucional(
+data class Perfil(
     val nombre: String,
     val rolYHospital: String,
     val correo: String,
@@ -31,16 +31,16 @@ data class PerfilInstitucional(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PerfilInstitucionalScreen(
-    perfil: PerfilInstitucional = PerfilInstitucional(
-        nombre = "Carlos Mendoza",
-        rolYHospital = "Médico - Hospital General",
-        correo = "carlos.mendoza@hospital.gt",
-        telefono = "+502 5555-1234",
-        institucion = "Hospital General de Guatemala",
-        departamento = "Guatemala",
-        rol = "Médico Solicitante",
-        miembroDesde = "Enero 2024"
+fun PerfilScreen(
+    perfil: Perfil = Perfil(
+        nombre = "",
+        rolYHospital = "",
+        correo = "",
+        telefono = "",
+        institucion = "",
+        departamento = "",
+        rol = "",
+        miembroDesde = ""
     ),
     onBackClick: () -> Unit = {},
     onCerrarSesion: () -> Unit = {}
@@ -51,7 +51,7 @@ fun PerfilInstitucionalScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Perfil Institucional",
+                        text = "Perfil",
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -262,6 +262,6 @@ private fun PerfilField(
 @Composable
 fun PerfilInstitucionalScreenPreview() {
     GotaVidaTheme {
-        PerfilInstitucionalScreen()
+        PerfilScreen()
     }
 }

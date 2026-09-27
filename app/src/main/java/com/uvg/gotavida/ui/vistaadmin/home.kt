@@ -57,7 +57,6 @@ fun BloodDonationScreen() {
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = { BottomNavBar() }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -66,20 +65,20 @@ fun BloodDonationScreen() {
                 .padding(horizontal = 20.dp)
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            HeaderSection(userName = "Carlos", location = "Guatemala, Zona 10")
+            Header(userName = "", location = "")
             Spacer(modifier = Modifier.height(20.dp))
-            RequestCard()
+            CreateRequest()
             Spacer(modifier = Modifier.height(16.dp))
-            CurrentRequestsCard(requestCount = 5)
+            CurrentRequests(requestCount = 0)
             Spacer(modifier = Modifier.height(16.dp))
-            BloodDistributionCard(bloodTypes)
+            BloodDistribution(bloodTypes)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-fun HeaderSection(userName: String, location: String) {
+fun Header(userName: String, location: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -124,7 +123,7 @@ fun HeaderSection(userName: String, location: String) {
 }
 
 @Composable
-fun RequestCard() {
+fun CreateRequest() {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -150,7 +149,7 @@ fun RequestCard() {
 }
 
 @Composable
-fun CurrentRequestsCard(requestCount: Int) {
+fun CurrentRequests(requestCount: Int) {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
@@ -178,7 +177,7 @@ fun CurrentRequestsCard(requestCount: Int) {
 }
 
 @Composable
-fun BloodDistributionCard(bloodTypes: List<BloodType>) {
+fun BloodDistribution(bloodTypes: List<BloodType>) {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -234,34 +233,6 @@ fun BloodTypeRow(bloodType: BloodType, maxPercentage: Int) {
             fontSize = 13.sp,
             color = Color.White,
             modifier = Modifier.width(38.dp)
-        )
-    }
-}
-
-@Composable
-fun BottomNavBar() {
-    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
-        NavigationBarItem(
-            selected = true,
-            onClick = { },
-            icon = { Icon(Icons.Filled.Home, contentDescription = "Inicio") },
-            label = { Text("Inicio") },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = MaterialTheme.colorScheme.primary,
-                selectedTextColor = MaterialTheme.colorScheme.primary
-            )
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Icon(Icons.Filled.Notifications, contentDescription = "Alertas") },
-            label = { Text("Alertas") }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Icon(Icons.Filled.Settings, contentDescription = "Ajustes") },
-            label = { Text("Ajustes") }
         )
     }
 }

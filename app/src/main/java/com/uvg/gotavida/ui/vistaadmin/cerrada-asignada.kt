@@ -29,12 +29,7 @@ import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.SuccessAccessible
 import com.uvg.gotavida.ui.theme.SuccessContainer
 
-/**
- * Composable genérico para las pantallas de resultado de una acción.
- *
- * Se utiliza para mostrar que una solicitud fue creada, asignada
- * o cerrada correctamente.
- */
+
 @Composable
 fun StatusScreen(
     icon: ImageVector,
@@ -170,42 +165,6 @@ private fun StatusBadge(
         contentAlignment = Alignment.Center
     ) {
 
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = null,
-            tint = sparkleColor,
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .size(16.dp)
-        )
-
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = null,
-            tint = sparkleColor,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .size(12.dp)
-        )
-
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = null,
-            tint = sparkleColor,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .size(12.dp)
-        )
-
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = null,
-            tint = sparkleColor,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(16.dp)
-        )
-
         Box(
             modifier = Modifier
                 .size(88.dp)
@@ -232,8 +191,6 @@ private fun StatusBadge(
         }
     }
 }
-
-// ---------- Pantallas concretas ----------
 
 @Composable
 fun SolicitudAsignadaScreen(
@@ -266,8 +223,6 @@ fun SolicitudCerradaScreen(
         onLinkClick = onVolverAlDashboard
     )
 }
-
-// ---------- Previews ----------
 
 @Preview(
     showBackground = true
