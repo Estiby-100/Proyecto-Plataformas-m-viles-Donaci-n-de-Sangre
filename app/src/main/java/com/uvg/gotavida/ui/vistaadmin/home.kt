@@ -36,9 +36,6 @@ fun bloodColorFor(key: BloodColorKey): Color {
         BloodColorKey.PRIMARY -> MaterialTheme.colorScheme.primary
         BloodColorKey.ORANGE -> WarningAccessible
         BloodColorKey.GREEN -> MaterialTheme.colorScheme.tertiary
-        // Tu paleta (Color.kt) no define un morado ni un azul propios;
-        // uso estos dos tonos de teal como sustituto más cercano.
-        // Dime si quieres que agregue colores dedicados para estos casos.
         BloodColorKey.PURPLE -> TealAccent
         BloodColorKey.BLUE -> OnTealContainer
         BloodColorKey.GRAY -> MaterialTheme.colorScheme.outline
