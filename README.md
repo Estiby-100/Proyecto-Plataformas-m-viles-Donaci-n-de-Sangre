@@ -17,7 +17,7 @@ app/src/main/java/com/uvg/gotavida/
 │   └── fake/       # Fuentes de datos fake (FakeXDataSource) usadas mientras no hay backend
 ├── ui/
 │   ├── theme/      # Color.kt, Type.kt, Theme.kt — sistema "Confianza Cálida" sobre Material 3
-│   └── donante/    # Flujo del donante (pantallas 6-11)
+│   └── donante/    # Flujo del donante
 │       ├── common/        # Componentes compartidos del flujo donante (badges, tarjetas, diálogos, bottom nav)
 │       ├── home/           # 6. Feed de solicitudes y jornadas
 │       ├── detalle/        # 7. Detalle de una solicitud
