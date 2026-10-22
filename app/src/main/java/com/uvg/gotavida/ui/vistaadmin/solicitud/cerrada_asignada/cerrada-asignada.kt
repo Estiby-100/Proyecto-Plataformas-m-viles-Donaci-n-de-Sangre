@@ -27,6 +27,10 @@ import com.uvg.gotavida.ui.theme.ErrorContainer
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.SuccessAccessible
 import com.uvg.gotavida.ui.theme.SuccessContainer
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.gotavida.splash.SplashScreen
+import com.uvg.gotavida.ui.vistaadmin.solicitud.cerrada_asignada.CerradaAsignadaEvent
+import com.uvg.gotavida.ui.vistaadmin.solicitud.cerrada_asignada.CerradaAsignadaViewModel
 
 
 @Composable
@@ -36,7 +40,6 @@ fun StatusScreen(
     ringBackground: Color,
     sparkleColor: Color,
     title: String,
-    subtitle: String,
     linkText: String = "Volver al dashboard",
     onLinkClick: () -> Unit = {}
 ) {
@@ -85,19 +88,7 @@ fun StatusScreen(
                     textAlign = TextAlign.Center
                 )
 
-                if (subtitle.isNotBlank()) {
 
-                    Spacer(
-                        modifier = Modifier.height(8.dp)
-                    )
-
-                    Text(
-                        text = subtitle,
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
-                }
 
                 Spacer(
                     modifier = Modifier.height(18.dp)
@@ -196,15 +187,33 @@ fun SolicitudAsignadaScreen(
     onVolverAlDashboard: () -> Unit = {}
 ) {
 
-    StatusScreen(
-        icon = Icons.Filled.Person,
-        badgeColor = SuccessAccessible,
-        ringBackground = SuccessContainer,
-        sparkleColor = SuccessAccessible,
-        title = "Solicitud asignada",
-        subtitle = "La solicitud ha sido asignada exitosamente.",
-        onLinkClick = onVolverAlDashboard
-    )
+    val viewModel: CerradaAsignadaViewModel = viewModel()
+
+    if (viewModel.state.isLoading) {
+
+        SplashScreen(
+            message = "Creando Solicitud..."
+        )
+
+
+    } else {
+
+        StatusScreen(
+            icon = Icons.Filled.Person,
+            badgeColor = SuccessAccessible,
+            ringBackground = SuccessContainer,
+            sparkleColor = SuccessAccessible,
+            title = "Solicitud asignada",
+            onLinkClick = {
+
+                viewModel.onEvent(
+                    CerradaAsignadaEvent.BackClick
+                )
+
+                onVolverAlDashboard()
+            }
+        )
+    }
 }
 
 @Composable
@@ -212,15 +221,33 @@ fun SolicitudCerradaScreen(
     onVolverAlDashboard: () -> Unit = {}
 ) {
 
-    StatusScreen(
-        icon = Icons.Filled.Lock,
-        badgeColor = ErrorAccessible,
-        ringBackground = ErrorContainer,
-        sparkleColor = ErrorAccessible,
-        title = "Solicitud cerrada",
-        subtitle = "La solicitud ha sido cerrada correctamente.",
-        onLinkClick = onVolverAlDashboard
-    )
+    val viewModel: CerradaAsignadaViewModel = viewModel()
+
+    if (viewModel.state.isLoading) {
+
+        SplashScreen(
+            message = "Creando Solicitud..."
+        )
+
+
+    } else {
+
+        StatusScreen(
+            icon = Icons.Filled.Lock,
+            badgeColor = ErrorAccessible,
+            ringBackground = ErrorContainer,
+            sparkleColor = ErrorAccessible,
+            title = "Solicitud cerrada",
+            onLinkClick = {
+
+                viewModel.onEvent(
+                    CerradaAsignadaEvent.BackClick
+                )
+
+                onVolverAlDashboard()
+            }
+        )
+    }
 }
 
 @Preview(

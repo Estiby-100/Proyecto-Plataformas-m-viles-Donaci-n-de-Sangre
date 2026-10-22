@@ -1,4 +1,4 @@
-package com.uvg.gotavida.components
+package com.uvg.gotavida.splash
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,13 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.gotavida.splash.SplashViewModel
 
 @Composable
-fun LoadingScreen(
+fun SplashScreen(
     message: String = "",
-    modifier: Modifier = Modifier,
-    title: String? = null
+    modifier: Modifier = Modifier
 ) {
+    val splashViewModel: SplashViewModel = viewModel()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -29,26 +33,21 @@ fun LoadingScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (title != null) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(Modifier.height(24.dp))
-        }
+
         CircularProgressIndicator()
         Spacer(Modifier.height(16.dp))
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.secondary,
+            fontWeight = FontWeight.Bold
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun LoadingScreenPreview() {
-    LoadingScreen(title = "Prueba", message = "Cargando...")
+private fun SplashScreenPreview() {
+    SplashScreen(message = "Cargando...")
 }
