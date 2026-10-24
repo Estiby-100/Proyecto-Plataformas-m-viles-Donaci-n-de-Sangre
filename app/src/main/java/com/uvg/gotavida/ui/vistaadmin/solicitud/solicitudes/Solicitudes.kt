@@ -1,4 +1,4 @@
-package com.uvg.gotavida.vistaadmin
+package com.uvg.gotavida.vistaadmin.solicitud.solicitudes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,21 +20,58 @@ import androidx.compose.ui.unit.sp
 import com.uvg.gotavida.ui.theme.CoralAction
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.SuccessAccessible
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 data class SolicitudCreada(
     val nombre: String,
     val ubicacion: String,
-    val tipoSangre: String,
-    val dadoresNecesarios: Int
+    val tipoSangre: String
 )
 
 @Composable
-fun SolicitudesCreadasScreen(
+fun SolicitudesScreen(
     onBackClick: () -> Unit = {},
     onCerrarSolicitud: (SolicitudCreada) -> Unit = {},
     onAsignarSolicitud: (SolicitudCreada) -> Unit = {}
 ) {
-    val solicitudes: List<SolicitudCreada> = emptyList()
+    val solicitudes = listOf(
+
+        SolicitudCreada(
+            nombre = "Hospital Roosevelt",
+            ubicacion = "Guatemala",
+            tipoSangre = "O-",
+        ),
+
+        SolicitudCreada(
+            nombre = "Hospital San Juan de Dios",
+            ubicacion = "Guatemala",
+            tipoSangre = "A+"
+        ),
+
+        SolicitudCreada(
+            nombre = "Hospital Regional de Quetzaltenango",
+            ubicacion = "Quetzaltenango",
+            tipoSangre = "B+"
+        ),
+
+        SolicitudCreada(
+            nombre = "IGSS Zona 9",
+            ubicacion = "Guatemala",
+            tipoSangre = "AB-"
+        ),
+
+        SolicitudCreada(
+            nombre = "Hospital Nacional de Escuintla",
+            ubicacion = "Escuintla",
+            tipoSangre = "O+"
+        ),
+
+        SolicitudCreada(
+            nombre = "Hospital de Cobán",
+            ubicacion = "Alta Verapaz",
+            tipoSangre = "A-"
+        )
+    )
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -104,15 +141,6 @@ private fun SolicitudesTopBar(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
-        },
-        actions = {
-            Text(
-                text = "Activas",
-                color = SuccessAccessible,
-                fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(end = 16.dp)
-            )
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background
@@ -255,7 +283,7 @@ private fun SolicitudCard(
             )
 
             Text(
-                text = "Tipo: ${solicitud.tipoSangre} • Necesita ${solicitud.dadoresNecesarios} dadores",
+                text = "Tipo: ${solicitud.tipoSangre} ",
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -305,8 +333,8 @@ private fun SolicitudCard(
     showBackground = true
 )
 @Composable
-fun SolicitudesCreadasScreenPreview() {
+fun SolicitudesScreenPreview() {
     GotaVidaTheme {
-        SolicitudesCreadasScreen()
+        SolicitudesScreen()
     }
 }
