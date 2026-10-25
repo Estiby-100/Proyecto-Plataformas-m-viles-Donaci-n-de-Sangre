@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uvg.gotavida.data.fake.FakeLugaresDataSource
 import com.uvg.gotavida.data.model.LugarMapa
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
@@ -55,21 +56,44 @@ private enum class VistaMapa { MAPA, LISTA }
 
 @Composable
 fun MapaRoute(
+    viewModel: MapaViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var vista by remember { mutableStateOf(VistaMapa.MAPA) }
-    var lugarSeleccionado by remember { mutableStateOf<LugarMapa?>(null) }
-    val lugares = remember { FakeLugaresDataSource.obtenerLugaresCercanos() }
+
+    val state = viewModel.state
 
     MapaScreen(
-        lugares = lugares,
-        vistaLista = vista == VistaMapa.LISTA,
-        permisoUbicacionConcedido = true,
-        lugarSeleccionado = lugarSeleccionado,
-        onCambiarVista = { vista = if (vista == VistaMapa.MAPA) VistaMapa.LISTA else VistaMapa.MAPA },
-        onLugarClick = { lugarSeleccionado = it },
-        onCerrarDetalle = { lugarSeleccionado = null },
-        onActivarUbicacionClick = { },
+        lugares = state.lugares,
+        vistaLista = state.vista,
+        permisoUbicacionConcedido =
+            state.permiso,
+        lugarSeleccionado =
+            state.seleccionado,
+
+        onCambiarVista = {
+            viewModel.onEvent(
+                MapaEvent.Vista
+            )
+        },
+
+        onLugarClick = {
+            viewModel.onEvent(
+                MapaEvent.Lugar(it)
+            )
+        },
+
+        onCerrarDetalle = {
+            viewModel.onEvent(
+                MapaEvent.Cerrar
+            )
+        },
+
+        onActivarUbicacionClick = {
+            viewModel.onEvent(
+                MapaEvent.Ubicacion
+            )
+        },
+
         modifier = modifier
     )
 }

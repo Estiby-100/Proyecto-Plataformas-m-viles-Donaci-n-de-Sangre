@@ -46,7 +46,6 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 20.dp),
     ) {
-        // Top bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()

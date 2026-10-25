@@ -45,25 +45,64 @@ import com.uvg.gotavida.data.model.SolicitudDonacion
 import com.uvg.gotavida.ui.donante.common.BadgeVerificado
 import com.uvg.gotavida.ui.donante.common.ChipUrgencia
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun DetalleSolicitudRoute(
     solicitudId: String,
+    viewModel: DetalleSolicitudViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var mostrarDialogoRechazo by remember { mutableStateOf(false) }
-    val solicitud = FakeSolicitudesDataSource.obtenerSolicitudPorId(solicitudId)
-        ?: FakeSolicitudesDataSource.obtenerSolicitudesUrgentesCompatibles().first()
+
+    LaunchedEffect(solicitudId) {
+        viewModel.cargarSolicitud(solicitudId)
+    }
+
+    val state = viewModel.state
 
     DetalleSolicitudScreen(
-        solicitud = solicitud,
-        mostrarDialogoRechazo = mostrarDialogoRechazo,
-        onPuedoDonarClick = {},
-        onNoPuedoDonarClick = { mostrarDialogoRechazo = true },
-        onConfirmarRechazo = { mostrarDialogoRechazo = false },
-        onVolverDialogoRechazo = { mostrarDialogoRechazo = false },
-        onVerEnMapaClick = {},
-        onAtrasClick = {},
+        solicitud = state.solicitud,
+
+        mostrarDialogoRechazo =
+            state.dialogoRechazo,
+
+        onPuedoDonarClick = {
+            viewModel.onEvent(
+                DetalleSolicitudEvent.Donar
+            )
+        },
+
+        onNoPuedoDonarClick = {
+            viewModel.onEvent(
+                DetalleSolicitudEvent.DialogoRechazo
+            )
+        },
+
+        onConfirmarRechazo = {
+            viewModel.onEvent(
+                DetalleSolicitudEvent.Confirmar
+            )
+        },
+
+        onVolverDialogoRechazo = {
+            viewModel.onEvent(
+                DetalleSolicitudEvent.Ocultar
+            )
+        },
+
+        onVerEnMapaClick = {
+            viewModel.onEvent(
+                DetalleSolicitudEvent.Mapa
+            )
+        },
+
+        onAtrasClick = {
+            viewModel.onEvent(
+                DetalleSolicitudEvent.Atras
+            )
+        },
+
         modifier = modifier
     )
 }

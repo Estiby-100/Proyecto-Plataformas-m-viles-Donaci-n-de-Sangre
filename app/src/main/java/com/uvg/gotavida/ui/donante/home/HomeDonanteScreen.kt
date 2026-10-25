@@ -49,6 +49,7 @@ import com.uvg.gotavida.ui.donante.common.DonanteBottomNavigation
 import com.uvg.gotavida.ui.donante.common.DonanteTab
 import com.uvg.gotavida.ui.donante.common.SolicitudCard
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 enum class FiltroFeed {
     TODAS,
@@ -65,41 +66,47 @@ enum class EstadoFeed {
 
 @Composable
 fun HomeDonanteRoute(
+    viewModel: HomeDonanteViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var disponible by remember { mutableStateOf(true) }
-    var filtroSeleccionado by remember { mutableStateOf(FiltroFeed.TODAS) }
 
-    val todasLasSolicitudes = FakeSolicitudesDataSource.obtenerSolicitudesUrgentesCompatibles()
-    val todasLasJornadas = FakeSolicitudesDataSource.obtenerJornadasCercanas()
-
-    val solicitudesAMostrar = when (filtroSeleccionado) {
-        FiltroFeed.JORNADAS -> emptyList()
-        else -> todasLasSolicitudes
-    }
-    val jornadasAMostrar = when (filtroSeleccionado) {
-        FiltroFeed.SOLICITUDES -> emptyList()
-        else -> todasLasJornadas
-    }
-
-    val estado = if (solicitudesAMostrar.isEmpty() && jornadasAMostrar.isEmpty()) {
-        EstadoFeed.VACIO
-    } else {
-        EstadoFeed.CON_CONTENIDO
-    }
+    val state = viewModel.state
 
     HomeDonanteScreen(
-        estado = estado,
-        disponible = disponible,
-        filtroSeleccionado = filtroSeleccionado,
-        solicitudesUrgentes = solicitudesAMostrar,
-        jornadas = jornadasAMostrar,
-        onDisponibleChange = { disponible = it },
-        onFiltroSeleccionado = { filtroSeleccionado = it },
-        onVerDetalle = {},
-        onNotificacionesClick = {},
+        estado = state.estado,
+        disponible = state.disponible,
+        filtroSeleccionado = state.filtroSeleccionado,
+        solicitudesUrgentes = state.urgentes,
+        jornadas = state.jornadas,
+
+        onDisponibleChange = {
+            viewModel.onEvent(
+                HomeDonanteEvent.Disponibilidad(it)
+            )
+        },
+
+        onFiltroSeleccionado = {
+            viewModel.onEvent(
+                HomeDonanteEvent.Filtro(it)
+            )
+        },
+
+        onVerDetalle = {
+            viewModel.onEvent(
+                HomeDonanteEvent.Detalle(it)
+            )
+        },
+
+        onNotificacionesClick = {
+            viewModel.onEvent(
+                HomeDonanteEvent.Notificaciones
+            )
+        },
+
         tabSeleccionado = DonanteTab.HOME,
+
         onTabSeleccionado = {},
+
         modifier = modifier
     )
 }

@@ -39,16 +39,15 @@ import com.uvg.gotavida.data.model.Notificacion
 import com.uvg.gotavida.data.model.NotificacionTipo
 import com.uvg.gotavida.data.model.RolCuenta
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun NotificacionesScreen(
-    viewModel: NotificacionesViewModel = viewModel(),
-    onNotificationClick: (Notificacion) -> Unit = {},
-    onBackClick: () -> Unit = {},
+    uiState: NotificacionesState,
+    onMarkAllReadClick: () -> Unit,
+    onNotificationClick: (String) -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val uiState = viewModel.state
 
     if (uiState.cargando) {
 
@@ -56,7 +55,6 @@ fun NotificacionesScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-
             androidx.compose.material3.CircularProgressIndicator()
         }
 
@@ -66,52 +64,62 @@ fun NotificacionesScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
     ) {
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
                 .padding(horizontal = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onBackClick) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Atrás")
+
+            IconButton(
+                onClick = onBackClick
+            ) {
+                Icon(
+                    Icons.Filled.ArrowBack,
+                    contentDescription = "Atrás"
+                )
             }
+
             Text(
                 text = "Notificaciones",
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
             )
+
             Text(
                 text = "Marcar todas",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.clickable {
-                    viewModel.onEvent(
-                    NotificacionesEvent.Marcar
-                ) },
+                    onMarkAllReadClick()
+                }
             )
         }
 
         if (uiState.notificaciones.isEmpty()) {
+
             EmptyState()
+
         } else {
+
             LazyColumn {
-                items(uiState.notificaciones, key = { it.id }) { notificacion ->
+
+                items(
+                    uiState.notificaciones,
+                    key = { it.id }
+                ) { notificacion ->
+
                     NotificacionItem(
                         notificacion = notificacion,
                         onClick = {
-                            viewModel.onEvent(
-                            NotificacionesEvent.Abrir(
-                                notificacion
-                            )
-                        )
-
                             onNotificationClick(
-                                notificacion
-                            ) },
+                                notificacion.id
+                            )
+                        }
                     )
                 }
             }
@@ -233,6 +241,12 @@ private fun NotificacionesScreenPreviewDonante() {
     GotaVidaTheme {
 
         NotificacionesScreen(
+            uiState = NotificacionesState(
+                notificaciones =
+                    FakeNotificacionesDataSource.donante,
+                cargando = false
+            ),
+            onMarkAllReadClick = {},
             onNotificationClick = {},
             onBackClick = {}
         )
@@ -245,6 +259,12 @@ private fun NotificacionesScreenPreviewMedica() {
     GotaVidaTheme {
 
         NotificacionesScreen(
+            uiState = NotificacionesState(
+                notificaciones =
+                    FakeNotificacionesDataSource.donante,
+                cargando = false
+            ),
+            onMarkAllReadClick = {},
             onNotificationClick = {},
             onBackClick = {}
         )
@@ -257,6 +277,12 @@ private fun NotificacionesScreenPreviewVacio() {
     GotaVidaTheme {
 
         NotificacionesScreen(
+            uiState = NotificacionesState(
+                notificaciones =
+                    FakeNotificacionesDataSource.donante,
+                cargando = false
+            ),
+            onMarkAllReadClick = {},
             onNotificationClick = {},
             onBackClick = {}
         )

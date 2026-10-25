@@ -7,27 +7,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.uvg.gotavida.data.fake.FakeNotificacionesDataSource
 import com.uvg.gotavida.data.model.RolCuenta
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 /**
  * rol se recibirá más adelante desde la sesión real del usuario (quien haya
  * iniciado sesión). Por ahora, quien use este Route decide qué rol simular.
  */
 @Composable
-fun NotificacionesRoute(rol: RolCuenta) {
-    var uiState by remember(rol) {
-        val notificacionesIniciales = when (rol) {
-            RolCuenta.DONANTE -> FakeNotificacionesDataSource.donante
-            RolCuenta.MEDICA -> FakeNotificacionesDataSource.medica
-        }
-        mutableStateOf(NotificacionesUiState(rol = rol, notificaciones = notificacionesIniciales))
-    }
+fun NotificacionesRoute(
+    rol: RolCuenta,
+    viewModel: NotificacionesViewModel = viewModel()
+) {
+
+    val state = viewModel.state
 
     NotificacionesScreen(
-        uiState = uiState,
+        uiState = state,
         onMarkAllReadClick = {
-            uiState = uiState.copy(notificaciones = uiState.notificaciones.map { it.copy(leida = true) })
+            viewModel.onEvent(NotificacionesEvent.Marcar)
         },
-        onNotificationClick = { /* TODO: navegar al detalle correspondiente según el tipo */ },
-        onBackClick = { /* TODO: navegar de regreso al Home del rol correspondiente */ },
+        onNotificationClick = { id ->
+            viewModel.onEvent(NotificacionesEvent.Abrir(id))
+        },
+        onBackClick = {
+            viewModel.onEvent(NotificacionesEvent.BackClick)
+        }
     )
 }

@@ -12,7 +12,6 @@ fun AjustesRoute(rol: RolCuenta) {
     var uiState by remember(rol) { mutableStateOf(AjustesUiState(rol = rol)) }
 
     AjustesScreen(
-        uiState = uiState,
         onEditarPerfilClick = { /* TODO: navegar a Editar perfil, aún no diseñada */ },
         onCambiarContrasenaClick = { /* TODO */ },
         onCorreoClick = { /* TODO */ },

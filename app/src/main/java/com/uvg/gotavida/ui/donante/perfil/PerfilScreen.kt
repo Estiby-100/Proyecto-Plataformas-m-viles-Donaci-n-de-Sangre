@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uvg.gotavida.data.fake.FakePerfilDataSource
 import com.uvg.gotavida.data.model.EstadoHistorial
 import com.uvg.gotavida.data.model.Insignia
@@ -52,18 +53,26 @@ import com.uvg.gotavida.ui.theme.WarningContainer
 
 @Composable
 fun PerfilRoute(
+    viewModel: PerfilViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var disponible by remember { mutableStateOf(true) }
+
+    val state = viewModel.state
 
     PerfilScreen(
-        nombre = "Esteban Sánchez",
-        tipoSangre = "O+",
-        disponible = disponible,
-        historial = FakePerfilDataSource.obtenerHistorial(),
-        insignias = FakePerfilDataSource.obtenerInsignias(),
-        cargando = false,
-        onDisponibleChange = { disponible = it },
+        nombre = state.nombre,
+        tipoSangre = state.sangre,
+        disponible = state.disponible,
+        historial = state.historial,
+        insignias = state.insignias,
+        cargando = state.cargando,
+
+        onDisponibleChange = {
+            viewModel.onEvent(
+                PerfilEvent.Disponibilidad(it)
+            )
+        },
+
         modifier = modifier
     )
 }
