@@ -1,4 +1,4 @@
-package com.uvg.gotavida.ui.vistaadmin
+package com.uvg.gotavida.ui.vistaadmin.user.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -19,38 +19,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
-import com.uvg.gotavida.ui.theme.WarningAccessible
-import com.uvg.gotavida.ui.theme.TealAccent
-import com.uvg.gotavida.ui.theme.OnTealContainer
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 data class BloodType(val type: String, val percentage: Int, val colorKey: BloodColorKey)
 
-enum class BloodColorKey { PRIMARY, ORANGE, GREEN, PURPLE, BLUE, GRAY }
+enum class BloodColorKey { PRIMARY, GRAY }
 
 @Composable
 fun bloodColorFor(key: BloodColorKey): Color {
     return when (key) {
         BloodColorKey.PRIMARY -> MaterialTheme.colorScheme.primary
-        BloodColorKey.ORANGE -> WarningAccessible
-        BloodColorKey.GREEN -> MaterialTheme.colorScheme.tertiary
-        BloodColorKey.PURPLE -> TealAccent
-        BloodColorKey.BLUE -> OnTealContainer
         BloodColorKey.GRAY -> MaterialTheme.colorScheme.outline
     }
 }
 
 @Composable
-fun BloodDonationScreen() {
-    val bloodTypes = listOf(
-        BloodType("O+", 0, BloodColorKey.PRIMARY),
-        BloodType("A+", 0, BloodColorKey.ORANGE),
-        BloodType("B+", 0, BloodColorKey.GREEN),
-        BloodType("AB+", 0, BloodColorKey.PURPLE),
-        BloodType("O-", 0, BloodColorKey.BLUE),
-        BloodType("A-", 0, BloodColorKey.GRAY),
-        BloodType("B-", 0, BloodColorKey.GRAY),
-        BloodType("AB-", 0, BloodColorKey.GRAY)
-    )
+fun BloodDonationScreen(
+    viewModel: HomeViewModel = viewModel(),
+    onCrearSolicitud: () -> Unit = {},
+    onVerSolicitudes: () -> Unit = {}
+) {
+    val state = viewModel.state
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -62,13 +51,31 @@ fun BloodDonationScreen() {
                 .padding(horizontal = 20.dp)
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            Header(userName = "", location = "")
+            Header(userName = state.userName,
+                location = state.location)
             Spacer(modifier = Modifier.height(20.dp))
-            CreateRequest()
+            CreateRequest(
+                onCreateClick = {
+                    viewModel.onEvent(
+                        HomeEvent.CrearSolicitud
+                    )
+                    onCrearSolicitud()
+                }
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            CurrentRequests(requestCount = 0)
+            CurrentRequests(
+                requestCount = state.requestCount,
+                onVerSolicitudes = {
+                    viewModel.onEvent(
+                        HomeEvent.VerSolicitudes
+                    )
+                    onVerSolicitudes()
+                }
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            BloodDistribution(bloodTypes)
+            BloodDistribution(
+                state.bloodTypes
+            )
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -120,7 +127,9 @@ fun Header(userName: String, location: String) {
 }
 
 @Composable
-fun CreateRequest() {
+fun CreateRequest(
+    onCreateClick: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -135,7 +144,7 @@ fun CreateRequest() {
             )
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
-                onClick = { /* TODO: acción crear solicitud */ },
+                onClick = onCreateClick,
                 shape = RoundedCornerShape(50),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
             ) {
@@ -146,7 +155,10 @@ fun CreateRequest() {
 }
 
 @Composable
-fun CurrentRequests(requestCount: Int) {
+fun CurrentRequests(
+    requestCount: Int,
+    onVerSolicitudes: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
@@ -161,7 +173,7 @@ fun CurrentRequests(requestCount: Int) {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Button(
-                onClick = { /* TODO: acción ver solicitudes */ },
+                onClick = onVerSolicitudes,
                 shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surface
@@ -237,7 +249,12 @@ fun BloodTypeRow(bloodType: BloodType, maxPercentage: Int) {
 @Preview(showBackground = true)
 @Composable
 fun BloodDonationScreenPreview() {
+
     GotaVidaTheme {
-        BloodDonationScreen()
+
+        BloodDonationScreen(
+            onCrearSolicitud = {},
+            onVerSolicitudes = {}
+        )
     }
 }

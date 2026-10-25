@@ -226,7 +226,7 @@ fun SolicitudCerradaScreen(
     if (viewModel.state.isLoading) {
 
         SplashScreen(
-            message = "Creando Solicitud..."
+            message = "Cerrando Solicitud..."
         )
 
 

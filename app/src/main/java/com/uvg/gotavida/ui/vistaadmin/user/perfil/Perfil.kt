@@ -1,4 +1,4 @@
-package com.uvg.gotavida.vistaadmin
+package com.uvg.gotavida.vistaadmin.user.perfil
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,34 +17,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
-
-data class Perfil(
-    val nombre: String,
-    val rolYHospital: String,
-    val correo: String,
-    val telefono: String,
-    val institucion: String,
-    val departamento: String,
-    val rol: String,
-    val miembroDesde: String
-)
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.gotavida.ui.vistaadmin.user.perfil.PerfilViewModel
+import com.uvg.gotavida.ui.vistaadmin.user.perfil.PerfilEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PerfilScreen(
-    perfil: Perfil = Perfil(
-        nombre = "",
-        rolYHospital = "",
-        correo = "",
-        telefono = "",
-        institucion = "",
-        departamento = "",
-        rol = "",
-        miembroDesde = ""
-    ),
+    viewModel: PerfilViewModel = viewModel(),
     onBackClick: () -> Unit = {},
     onCerrarSesion: () -> Unit = {}
 ) {
+    val state = viewModel.state
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -57,7 +42,14 @@ fun PerfilScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = {
+
+                        viewModel.onEvent(
+                            PerfilEvent.BackClick
+                        )
+
+                        onBackClick()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver",
@@ -83,7 +75,6 @@ fun PerfilScreen(
                 modifier = Modifier.height(12.dp)
             )
 
-            // Avatar + nombre
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -111,7 +102,7 @@ fun PerfilScreen(
                 )
 
                 Text(
-                    text = perfil.nombre,
+                    text = state.perfil.nombre,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -122,7 +113,7 @@ fun PerfilScreen(
                 )
 
                 Text(
-                    text = perfil.rolYHospital,
+                    text = state.perfil.hospital,
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -157,32 +148,32 @@ fun PerfilScreen(
 
                     PerfilField(
                         label = "Correo electrónico",
-                        value = perfil.correo
+                        value = state.perfil.correo
                     )
 
                     PerfilField(
                         label = "Teléfono",
-                        value = perfil.telefono
+                        value = state.perfil.telefono
                     )
 
                     PerfilField(
                         label = "Institución",
-                        value = perfil.institucion
+                        value = state.perfil.institucion
                     )
 
                     PerfilField(
                         label = "Departamento",
-                        value = perfil.departamento
+                        value = state.perfil.departamento
                     )
 
                     PerfilField(
                         label = "Rol",
-                        value = perfil.rol
+                        value = state.perfil.rol
                     )
 
                     PerfilField(
                         label = "Miembro desde",
-                        value = perfil.miembroDesde,
+                        value = state.perfil.miembro,
                         isLast = true
                     )
                 }
@@ -193,7 +184,14 @@ fun PerfilScreen(
             )
 
             OutlinedButton(
-                onClick = onCerrarSesion,
+                onClick = {
+
+                    viewModel.onEvent(
+                        PerfilEvent.CerrarSesion
+                    )
+
+                    onCerrarSesion()
+                },
                 shape = MaterialTheme.shapes.extraSmall,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -261,7 +259,11 @@ private fun PerfilField(
 @Preview(showBackground = true)
 @Composable
 fun PerfilInstitucionalScreenPreview() {
+
     GotaVidaTheme {
-        PerfilScreen()
+        PerfilScreen(
+            onBackClick = {},
+            onCerrarSesion = {}
+        )
     }
 }
