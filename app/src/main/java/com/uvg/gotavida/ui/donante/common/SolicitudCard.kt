@@ -25,7 +25,7 @@ import com.uvg.gotavida.ui.theme.GotaVidaTheme
 
 @Composable
 fun SolicitudCard(
-    solicitud: SolicitudDonacion,
+    solicitud: SolicitudDonacion?,
     onAccionClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {

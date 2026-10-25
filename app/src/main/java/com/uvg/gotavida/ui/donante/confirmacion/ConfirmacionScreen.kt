@@ -28,10 +28,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -39,29 +35,75 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.uvg.gotavida.data.fake.FakeSolicitudesDataSource
 import com.uvg.gotavida.data.model.SolicitudDonacion
-import com.uvg.gotavida.ui.donante.common.DialogoContactoInstitucion
+import com.uvg.gotavida.ui.donante.common.Institucion
 import com.uvg.gotavida.ui.donante.common.SolicitudCard
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun ConfirmacionRoute(
+    viewModel: ConfirmacionViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val solicitud = remember { FakeSolicitudesDataSource.obtenerSolicitudesUrgentesCompatibles().first() }
-    var mostrarDialogoContacto by remember { mutableStateOf(false) }
-    var mostrarDialogoCancelar by remember { mutableStateOf(false) }
+
+    val state = viewModel.state
 
     ConfirmacionScreen(
-        solicitud = solicitud,
-        mostrarDialogoContacto = mostrarDialogoContacto,
-        mostrarDialogoCancelar = mostrarDialogoCancelar,
-        onAbrirEnMapaClick = { },
-        onContactarInstitucionClick = { mostrarDialogoContacto = true },
-        onCerrarDialogoContacto = { mostrarDialogoContacto = false },
-        onEntendidoClick = { },
-        onCancelarParticipacionClick = { mostrarDialogoCancelar = true },
-        onVolverDialogoCancelar = { mostrarDialogoCancelar = false },
-        onConfirmarCancelacion = { mostrarDialogoCancelar = false },
+        solicitud = state.solicitud,
+
+        mostrarDialogoContacto = state.mostrarDialogoContacto,
+
+        mostrarDialogoCancelar = state.mostrarDialogoCancelar,
+
+        onAbrirEnMapaClick = {
+
+            viewModel.onEvent(
+                ConfirmacionEvent.Mapa
+            )
+        },
+
+        onContactarInstitucionClick = {
+
+            viewModel.onEvent(
+                ConfirmacionEvent.MostrarContacto
+            )
+        },
+
+        onCerrarDialogoContacto = {
+
+            viewModel.onEvent(
+                ConfirmacionEvent.OcultarContacto
+            )
+        },
+
+        onEntendidoClick = {
+
+            viewModel.onEvent(
+                ConfirmacionEvent.Entendido
+            )
+        },
+
+        onCancelarParticipacionClick = {
+
+            viewModel.onEvent(
+                ConfirmacionEvent.Mostrar
+            )
+        },
+
+        onVolverDialogoCancelar = {
+
+            viewModel.onEvent(
+                ConfirmacionEvent.Ocultar
+            )
+        },
+
+        onConfirmarCancelacion = {
+
+            viewModel.onEvent(
+                ConfirmacionEvent.Confirmar
+            )
+        },
+
         modifier = modifier
     )
 }
@@ -214,7 +256,7 @@ fun ConfirmacionScreen(
             }
 
             if (mostrarDialogoContacto) {
-                DialogoContactoInstitucion(
+                Institucion(
                     institucion = solicitud.institucion,
                     telefono = solicitud.telefonoInstitucion,
                     onLlamarClick = onCerrarDialogoContacto,

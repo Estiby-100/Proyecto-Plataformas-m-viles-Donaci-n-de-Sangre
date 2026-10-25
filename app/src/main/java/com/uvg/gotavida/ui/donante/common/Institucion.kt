@@ -6,7 +6,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 
 @Composable
-fun DialogoContactoInstitucion(
+fun Institucion(
     institucion: String,
     telefono: String,
     onLlamarClick: () -> Unit,
@@ -24,3 +24,4 @@ fun DialogoContactoInstitucion(
         }
     )
 }
+

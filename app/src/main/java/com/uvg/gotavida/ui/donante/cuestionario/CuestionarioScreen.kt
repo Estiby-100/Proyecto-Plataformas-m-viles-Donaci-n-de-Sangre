@@ -41,10 +41,11 @@ import androidx.compose.ui.unit.dp
 import com.uvg.gotavida.data.fake.FakePreguntasDataSource
 import com.uvg.gotavida.data.model.PreguntaElegibilidad
 import com.uvg.gotavida.data.model.RespuestaElegibilidad
-import com.uvg.gotavida.ui.donante.common.DialogoContactoInstitucion
+import com.uvg.gotavida.ui.donante.common.Institucion
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.WarningAccessible
 import com.uvg.gotavida.ui.theme.WarningContainer
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 enum class VistaCuestionario {
     PREGUNTA,
@@ -54,35 +55,74 @@ enum class VistaCuestionario {
 
 @Composable
 fun CuestionarioRoute(
+    viewModel: CuestionarioViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var numeroPregunta by remember { mutableStateOf(1) }
-    var respuestaSeleccionada by remember { mutableStateOf<RespuestaElegibilidad?>(null) }
-    var vista by remember { mutableStateOf(VistaCuestionario.PREGUNTA) }
-    var mostrarDialogoContacto by remember { mutableStateOf(false) }
 
-    val pregunta = FakePreguntasDataSource.obtenerPregunta(numeroPregunta)
+    val state = viewModel.state
 
     CuestionarioScreen(
-        vista = vista,
-        pregunta = pregunta,
-        respuestaSeleccionada = respuestaSeleccionada,
-        mostrarDialogoContacto = mostrarDialogoContacto,
-        onRespuestaSeleccionada = { respuestaSeleccionada = it },
-        onSiguienteClick = {
-            if (numeroPregunta < pregunta.total) {
-                numeroPregunta += 1
-                respuestaSeleccionada = null
-            } else {
-                vista = VistaCuestionario.RESULTADO_APTO
-            }
+        vista = state.vista,
+        pregunta = state.pregunta,
+        respuestaSeleccionada = state.respuestaSeleccionada,
+        mostrarDialogoContacto = state.mostrarDialogoContacto,
+
+        onRespuestaSeleccionada = {
+
+            viewModel.onEvent(
+                CuestionarioEvent.Respuesta(it)
+            )
         },
-        onCerrarClick = {},
-        onContinuarClick = {},
-        onVolverInicioClick = {},
-        onConsultarInstitucionClick = { mostrarDialogoContacto = true },
-        onLlamarClick = { mostrarDialogoContacto = false },
-        onCancelarDialogoClick = { mostrarDialogoContacto = false },
+
+        onSiguienteClick = {
+
+            viewModel.onEvent(
+                CuestionarioEvent.Siguiente
+            )
+        },
+
+        onCerrarClick = {
+
+            viewModel.onEvent(
+                CuestionarioEvent.Cerrar
+            )
+        },
+
+        onContinuarClick = {
+
+            viewModel.onEvent(
+                CuestionarioEvent.Continuar
+            )
+        },
+
+        onVolverInicioClick = {
+
+            viewModel.onEvent(
+                CuestionarioEvent.Inicio
+            )
+        },
+
+        onConsultarInstitucionClick = {
+
+            viewModel.onEvent(
+                CuestionarioEvent.Mostrar
+            )
+        },
+
+        onLlamarClick = {
+
+            viewModel.onEvent(
+                CuestionarioEvent.Ocultar
+            )
+        },
+
+        onCancelarDialogoClick = {
+
+            viewModel.onEvent(
+                CuestionarioEvent.Ocultar
+            )
+        },
+
         modifier = modifier
     )
 }
@@ -124,7 +164,7 @@ fun CuestionarioScreen(
             }
 
             if (mostrarDialogoContacto) {
-                DialogoContactoInstitucion(
+                Institucion(
                     institucion = "Hospital Roosevelt",
                     telefono = "0000-0000",
                     onLlamarClick = onLlamarClick,
