@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "685573540729",
+    "project_id": "gotavida",
+    "storage_bucket": "gotavida.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:685573540729:android:76693430a272f148867da8",
+        "android_client_info": {
+          "package_name": "com.uvg.gotavida"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDatHfHdaKKiZF6dbnE7HDWMn7QTs--VBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
