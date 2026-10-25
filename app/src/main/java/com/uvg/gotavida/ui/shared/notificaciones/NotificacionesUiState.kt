@@ -4,6 +4,20 @@ import com.uvg.gotavida.data.model.Notificacion
 import com.uvg.gotavida.data.model.RolCuenta
 
 data class NotificacionesUiState(
+    val cargando: Boolean = true,
     val rol: RolCuenta = RolCuenta.DONANTE,
     val notificaciones: List<Notificacion> = emptyList(),
 )
+
+sealed interface NotificacionesEvent {
+
+    data object Cargar : NotificacionesEvent
+
+    data object Marcar : NotificacionesEvent
+
+    data class Abrir(
+        val notificacion: Notificacion
+    ) : NotificacionesEvent
+
+    data object BackClick : NotificacionesEvent
+}

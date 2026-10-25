@@ -39,15 +39,30 @@ import com.uvg.gotavida.data.model.Notificacion
 import com.uvg.gotavida.data.model.NotificacionTipo
 import com.uvg.gotavida.data.model.RolCuenta
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun NotificacionesScreen(
-    uiState: NotificacionesUiState,
-    onMarkAllReadClick: () -> Unit,
-    onNotificationClick: (Notificacion) -> Unit,
-    onBackClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    viewModel: NotificacionesViewModel = viewModel(),
+    onNotificationClick: (Notificacion) -> Unit = {},
+    onBackClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
+    val uiState = viewModel.state
+
+    if (uiState.cargando) {
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+
+            androidx.compose.material3.CircularProgressIndicator()
+        }
+
+        return
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -73,7 +88,10 @@ fun NotificacionesScreen(
                 text = "Marcar todas",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.clickable { onMarkAllReadClick() },
+                modifier = Modifier.clickable {
+                    viewModel.onEvent(
+                    NotificacionesEvent.Marcar
+                ) },
             )
         }
 
@@ -84,7 +102,16 @@ fun NotificacionesScreen(
                 items(uiState.notificaciones, key = { it.id }) { notificacion ->
                     NotificacionItem(
                         notificacion = notificacion,
-                        onClick = { onNotificationClick(notificacion) },
+                        onClick = {
+                            viewModel.onEvent(
+                            NotificacionesEvent.Abrir(
+                                notificacion
+                            )
+                        )
+
+                            onNotificationClick(
+                                notificacion
+                            ) },
                     )
                 }
             }
@@ -199,18 +226,15 @@ private fun EmptyState() {
     }
 }
 
-// --- Previews ---
 
 @Preview(showBackground = true, name = "Notificaciones - Donante")
 @Composable
 private fun NotificacionesScreenPreviewDonante() {
     GotaVidaTheme {
+
         NotificacionesScreen(
-            uiState = NotificacionesUiState(
-                rol = RolCuenta.DONANTE,
-                notificaciones = FakeNotificacionesDataSource.donante,
-            ),
-            onMarkAllReadClick = {}, onNotificationClick = {}, onBackClick = {},
+            onNotificationClick = {},
+            onBackClick = {}
         )
     }
 }
@@ -219,12 +243,10 @@ private fun NotificacionesScreenPreviewDonante() {
 @Composable
 private fun NotificacionesScreenPreviewMedica() {
     GotaVidaTheme {
+
         NotificacionesScreen(
-            uiState = NotificacionesUiState(
-                rol = RolCuenta.MEDICA,
-                notificaciones = FakeNotificacionesDataSource.medica,
-            ),
-            onMarkAllReadClick = {}, onNotificationClick = {}, onBackClick = {},
+            onNotificationClick = {},
+            onBackClick = {}
         )
     }
 }
@@ -233,9 +255,10 @@ private fun NotificacionesScreenPreviewMedica() {
 @Composable
 private fun NotificacionesScreenPreviewVacio() {
     GotaVidaTheme {
+
         NotificacionesScreen(
-            uiState = NotificacionesUiState(notificaciones = emptyList()),
-            onMarkAllReadClick = {}, onNotificationClick = {}, onBackClick = {},
+            onNotificationClick = {},
+            onBackClick = {}
         )
     }
 }

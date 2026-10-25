@@ -32,10 +32,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.uvg.gotavida.data.model.RolCuenta
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun AjustesScreen(
-    uiState: AjustesUiState,
+    viewModel: AjustesViewModel = viewModel(),
     onEditarPerfilClick: () -> Unit,
     onCambiarContrasenaClick: () -> Unit,
     onCorreoClick: () -> Unit,
@@ -51,6 +52,8 @@ fun AjustesScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val uiState = viewModel.state
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -81,8 +84,20 @@ fun AjustesScreen(
         }
 
         SectionTitle("NOTIFICACIONES")
-        SwitchRow("Recibir notificaciones push", uiState.notificacionesPushEnabled, onTogglePush)
-        SwitchRow("Recibir alertas por correo", uiState.alertasCorreoEnabled, onToggleCorreo)
+        SwitchRow("Recibir notificaciones push",
+            uiState.notificacionesPushEnabled,
+            {
+            viewModel.onEvent(
+                AjustesEvent.TogglePush
+            )
+        })
+        SwitchRow("Recibir alertas por correo",
+            uiState.alertasCorreoEnabled,
+            {
+                viewModel.onEvent(
+                    AjustesEvent.ToggleCorreo
+                )
+            })
 
         SectionTitle("PRIVACIDAD")
         SettingsListItem(
@@ -100,7 +115,10 @@ fun AjustesScreen(
             text = "Cerrar sesión",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.clickable { onCerrarSesionClick() },
+            modifier = Modifier.clickable {
+                viewModel.onEvent(
+                AjustesEvent.MostrarDialogo
+            ) },
         )
 
         Spacer(Modifier.height(24.dp))
@@ -116,15 +134,27 @@ fun AjustesScreen(
 
     if (uiState.showLogoutDialog) {
         AlertDialog(
-            onDismissRequest = onDismissLogoutDialog,
+            onDismissRequest = {
+                viewModel.onEvent(
+                    AjustesEvent.OcultarDialogo
+                )
+            },
             title = { Text("¿Cerrar sesión?") },
             confirmButton = {
-                TextButton(onClick = onConfirmarCerrarSesion) {
+                TextButton(onClick = {
+                    viewModel.onEvent(
+                        AjustesEvent.Confirmar
+                    )
+                }) {
                     Text("Cerrar sesión", color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
-                TextButton(onClick = onDismissLogoutDialog) {
+                TextButton(onClick = {
+                    viewModel.onEvent(
+                        AjustesEvent.OcultarDialogo
+                    )
+                }) {
                     Text("Cancelar")
                 }
             },
@@ -204,7 +234,6 @@ private fun SwitchRow(label: String, checked: Boolean, onToggle: () -> Unit) {
 private fun AjustesScreenPreviewDonante() {
     GotaVidaTheme {
         AjustesScreen(
-            uiState = AjustesUiState(rol = RolCuenta.DONANTE),
             onEditarPerfilClick = {}, onCambiarContrasenaClick = {}, onCorreoClick = {},
             onVerificacionInstitucionalClick = {}, onTogglePush = {}, onToggleCorreo = {},
             onPrivacidadClick = {}, onCentroAyudaClick = {}, onReportarProblemaClick = {},
@@ -219,7 +248,6 @@ private fun AjustesScreenPreviewDonante() {
 private fun AjustesScreenPreviewMedica() {
     GotaVidaTheme {
         AjustesScreen(
-            uiState = AjustesUiState(rol = RolCuenta.MEDICA),
             onEditarPerfilClick = {}, onCambiarContrasenaClick = {}, onCorreoClick = {},
             onVerificacionInstitucionalClick = {}, onTogglePush = {}, onToggleCorreo = {},
             onPrivacidadClick = {}, onCentroAyudaClick = {}, onReportarProblemaClick = {},
@@ -229,17 +257,25 @@ private fun AjustesScreenPreviewMedica() {
     }
 }
 
-@Preview(showBackground = true, name = "Ajustes - Diálogo cerrar sesión")
+@Preview(showBackground = true)
 @Composable
-private fun AjustesScreenPreviewDialog() {
+fun AjustesScreenPreview() {
+
     GotaVidaTheme {
         AjustesScreen(
-            uiState = AjustesUiState(rol = RolCuenta.DONANTE, showLogoutDialog = true),
-            onEditarPerfilClick = {}, onCambiarContrasenaClick = {}, onCorreoClick = {},
-            onVerificacionInstitucionalClick = {}, onTogglePush = {}, onToggleCorreo = {},
-            onPrivacidadClick = {}, onCentroAyudaClick = {}, onReportarProblemaClick = {},
-            onCerrarSesionClick = {}, onConfirmarCerrarSesion = {}, onDismissLogoutDialog = {},
-            onBackClick = {},
+            onEditarPerfilClick = {},
+            onCambiarContrasenaClick = {},
+            onCorreoClick = {},
+            onVerificacionInstitucionalClick = {},
+            onTogglePush = {},
+            onToggleCorreo = {},
+            onPrivacidadClick = {},
+            onCentroAyudaClick = {},
+            onReportarProblemaClick = {},
+            onCerrarSesionClick = {},
+            onConfirmarCerrarSesion = {},
+            onDismissLogoutDialog = {},
+            onBackClick = {}
         )
     }
 }

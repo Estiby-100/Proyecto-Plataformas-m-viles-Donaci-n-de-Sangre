@@ -8,3 +8,19 @@ data class AjustesUiState(
     val alertasCorreoEnabled: Boolean = false,
     val showLogoutDialog: Boolean = false,
 )
+
+sealed interface AjustesEvent {
+    data object Editar : AjustesEvent
+    data object CambiarContrasena : AjustesEvent
+    data object Correo : AjustesEvent
+    data object Verificacion : AjustesEvent
+    data object TogglePush : AjustesEvent
+    data object ToggleCorreo : AjustesEvent
+    data object Privacidad : AjustesEvent
+    data object Ayuda : AjustesEvent
+    data object ReportarP : AjustesEvent
+    data object MostrarDialogo : AjustesEvent
+    data object Confirmar : AjustesEvent
+    data object OcultarDialogo : AjustesEvent
+    data object BackClick : AjustesEvent
+}
