@@ -5,16 +5,41 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun RegistroDonanteRoute() {
-    var uiState by remember { mutableStateOf(RegistroDonanteUiState()) }
+fun RegistroDonanteRoute(
+    viewModel: RegistroDonanteViewModel = viewModel()
+) {
+
+    val state = viewModel.state
 
     RegistroDonanteScreen(
-        uiState = uiState,
-        onBloodTypeSelected = { uiState = uiState.copy(selectedBloodType = it) },
-        onCiudadChange = { uiState = uiState.copy(ciudadOZona = it) },
-        onContinueClick = { /* TODO: crear cuenta y navegar a Home donante */ },
-        onBackClick = { /* TODO: navegar a Registro básico */ },
+
+        uiState = state,
+
+        onBloodTypeSelected = {
+            viewModel.onEvent(
+                RegistroDonanteEvent.BloodTypeSelected(it)
+            )
+        },
+
+        onCiudadChange = {
+            viewModel.onEvent(
+                RegistroDonanteEvent.Ciudad(it)
+            )
+        },
+
+        onContinueClick = {
+            viewModel.onEvent(
+                RegistroDonanteEvent.Continue
+            )
+        },
+
+        onBackClick = {
+            viewModel.onEvent(
+                RegistroDonanteEvent.Back
+            )
+        }
     )
 }

@@ -5,25 +5,83 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun RegistroBasicoRoute() {
-    var uiState by remember { mutableStateOf(RegistroBasicoUiState()) }
+fun RegistroBasicoRoute(
+    viewModel: RegistroBasicoViewModel = viewModel()
+) {
+
+    val state = viewModel.state
 
     RegistroBasicoScreen(
-        uiState = uiState,
-        onNombreChange = { uiState = uiState.copy(nombreCompleto = it) },
-        onEmailChange = { uiState = uiState.copy(email = it) },
-        onPasswordChange = { uiState = uiState.copy(password = it) },
-        onConfirmPasswordChange = { uiState = uiState.copy(confirmPassword = it) },
-        onTogglePasswordVisibility = { uiState = uiState.copy(passwordVisible = !uiState.passwordVisible) },
-        onToggleConfirmPasswordVisibility = {
-            uiState = uiState.copy(confirmPasswordVisible = !uiState.confirmPasswordVisible)
+
+        uiState = state,
+
+        onNombreChange = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.NombreChanged(it)
+            )
         },
-        onToggleAcceptedTerms = { uiState = uiState.copy(acceptedTerms = !uiState.acceptedTerms) },
-        onTermsClick = { /* TODO: pantalla de Términos, pendiente de aprobación */ },
-        onPrivacyClick = { /* TODO: pantalla de Política de Privacidad, pendiente de aprobación */ },
-        onContinueClick = { /* TODO: navegar a Registro donante o Registro médica según el rol elegido en Splash */ },
-        onBackClick = { /* TODO: navegar a Splash */ },
+
+        onEmailChange = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.EmailChanged(it)
+            )
+        },
+
+        onPasswordChange = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.PasswordChanged(it)
+            )
+        },
+
+        onConfirmPasswordChange = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.Confirm(it)
+            )
+        },
+
+        onTogglePasswordVisibility = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.Toggle
+            )
+        },
+
+        onToggleConfirmPasswordVisibility = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.ToggleConfirm
+            )
+        },
+
+        onToggleAcceptedTerms = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.ToggleAcceptedTerms
+            )
+        },
+
+        onContinueClick = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.Continue
+            )
+        },
+
+        onBackClick = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.Back
+            )
+        },
+
+        onTermsClick = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.OpenTerms
+            )
+        },
+
+        onPrivacyClick = {
+            viewModel.onEvent(
+                RegistroBasicoEvent.OpenPrivacy
+            )
+        }
     )
 }

@@ -52,7 +52,6 @@ fun RegistroBasicoScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 20.dp),
     ) {
-        // Top bar: flecha + progreso
         Row(
             modifier = Modifier.fillMaxWidth().height(56.dp),
             verticalAlignment = Alignment.CenterVertically,

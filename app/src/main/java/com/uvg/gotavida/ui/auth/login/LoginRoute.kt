@@ -5,27 +5,58 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-/**
- * En esta fase no hay lógica real de autenticación ni navegación — el
- * Route solo sostiene el estado de los campos de texto para que la
- * pantalla se sienta interactiva al correrla. El día que se agregue
- * lógica real, aquí es donde entraría el ViewModel (no dentro del Screen).
- */
 @Composable
-fun LoginRoute() {
-    var uiState by remember { mutableStateOf(LoginUiState()) }
+fun LoginRoute(
+    viewModel: LoginViewModel = viewModel()
+) {
+
+    val state = viewModel.state
 
     LoginScreen(
-        uiState = uiState,
-        onEmailChange = { uiState = uiState.copy(email = it, errorMessage = null) },
-        onPasswordChange = { uiState = uiState.copy(password = it, errorMessage = null) },
-        onTogglePasswordVisibility = {
-            uiState = uiState.copy(passwordVisible = !uiState.passwordVisible)
+        uiState = state,
+
+        onEmailChange = {
+            viewModel.onEvent(
+                LoginEvent.EmailChanged(it)
+            )
         },
-        onLoginClick = { /* TODO: autenticar y navegar según rol */ },
-        onForgotPasswordClick = { /* TODO: pendiente de aprobación del equipo */ },
-        onBackClick = { /* TODO: navegar a Splash */ },
-        onRegisterClick = { /* TODO: navegar a Splash */ },
+
+        onPasswordChange = {
+            viewModel.onEvent(
+                LoginEvent.PasswordChanged(it)
+            )
+        },
+
+        onTogglePasswordVisibility = {
+            viewModel.onEvent(
+                LoginEvent.Toggle
+            )
+        },
+
+        onLoginClick = {
+            viewModel.onEvent(
+                LoginEvent.Login
+            )
+        },
+
+        onForgotPasswordClick = {
+            viewModel.onEvent(
+                LoginEvent.Forgot
+            )
+        },
+
+        onBackClick = {
+            viewModel.onEvent(
+                LoginEvent.Back
+            )
+        },
+
+        onRegisterClick = {
+            viewModel.onEvent(
+                LoginEvent.Register
+            )
+        }
     )
 }
