@@ -39,75 +39,90 @@ import com.uvg.gotavida.ui.donante.common.Institucion
 import com.uvg.gotavida.ui.donante.common.SolicitudCard
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.CircularProgressIndicator
 
 @Composable
 fun ConfirmacionRoute(
+    solicitudId: String,
+    onAbrirEnMapaClick: () -> Unit,
+    onEntendidoClick: () -> Unit,
+    onParticipacionCancelada: () -> Unit,
     viewModel: ConfirmacionViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
 
-    val state = viewModel.state
+    LaunchedEffect(solicitudId) {
+        viewModel.onEvent(ConfirmacionEvent.Cargar(solicitudId))
+    }
+
+    val state by viewModel.state.collectAsState()
+
+    val solicitud = state.solicitud
+    if (solicitud == null) {
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        }
+        return
+    }
 
     ConfirmacionScreen(
-        solicitud = state.solicitud,
+        solicitud = solicitud,
 
         mostrarDialogoContacto = state.mostrarDialogoContacto,
 
         mostrarDialogoCancelar = state.mostrarDialogoCancelar,
 
         onAbrirEnMapaClick = {
-
             viewModel.onEvent(
                 ConfirmacionEvent.Mapa
             )
+            onAbrirEnMapaClick()
         },
 
         onContactarInstitucionClick = {
-
             viewModel.onEvent(
                 ConfirmacionEvent.MostrarContacto
             )
         },
 
         onCerrarDialogoContacto = {
-
             viewModel.onEvent(
                 ConfirmacionEvent.OcultarContacto
             )
         },
 
         onEntendidoClick = {
-
             viewModel.onEvent(
                 ConfirmacionEvent.Entendido
             )
+            onEntendidoClick()
         },
 
         onCancelarParticipacionClick = {
-
             viewModel.onEvent(
                 ConfirmacionEvent.Mostrar
             )
         },
 
         onVolverDialogoCancelar = {
-
             viewModel.onEvent(
                 ConfirmacionEvent.Ocultar
             )
         },
 
         onConfirmarCancelacion = {
-
             viewModel.onEvent(
                 ConfirmacionEvent.Confirmar
             )
+            onParticipacionCancelada()
         },
 
         modifier = modifier
     )
 }
-
 @Composable
 fun ConfirmacionScreen(
     solicitud: SolicitudDonacion,

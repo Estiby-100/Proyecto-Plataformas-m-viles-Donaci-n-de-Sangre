@@ -1,45 +1,35 @@
 package com.uvg.gotavida.ui.donante.mapa
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.uvg.gotavida.data.fake.FakeLugaresDataSource
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class MapaViewModel : ViewModel() {
 
-    var state by mutableStateOf(
+    private val _state = MutableStateFlow(
         MapaState(
-            lugares =
-                FakeLugaresDataSource
-                    .obtenerLugaresCercanos()
+            lugares = FakeLugaresDataSource.obtenerLugaresCercanos()
         )
     )
-        private set
+    val state: StateFlow<MapaState> = _state.asStateFlow()
 
     fun onEvent(event: MapaEvent) {
 
         when (event) {
 
             MapaEvent.Vista -> {
-
-                state = state.copy(
-                    vista = !state.vista
-                )
+                _state.update { it.copy(vista = !it.vista) }
             }
 
             is MapaEvent.Lugar -> {
-
-                state = state.copy(
-                    seleccionado = event.lugar
-                )
+                _state.update { it.copy(seleccionado = event.lugar) }
             }
 
             MapaEvent.Cerrar -> {
-
-                state = state.copy(
-                    seleccionado = null
-                )
+                _state.update { it.copy(seleccionado = null) }
             }
 
             MapaEvent.Ubicacion -> Unit

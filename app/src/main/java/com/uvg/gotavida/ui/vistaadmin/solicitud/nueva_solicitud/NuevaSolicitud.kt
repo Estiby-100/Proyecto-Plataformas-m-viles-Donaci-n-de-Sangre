@@ -26,7 +26,7 @@ fun NuevaSolicitud(
     onEnviarClick: (NuevaSolicitudState) -> Unit = {}
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,

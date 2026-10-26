@@ -46,6 +46,7 @@ import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.WarningAccessible
 import com.uvg.gotavida.ui.theme.WarningContainer
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
 
 enum class VistaCuestionario {
     PREGUNTA,
@@ -55,11 +56,14 @@ enum class VistaCuestionario {
 
 @Composable
 fun CuestionarioRoute(
+    onCerrarClick: () -> Unit,
+    onContinuarClick: () -> Unit,
+    onVolverInicioClick: () -> Unit,
     viewModel: CuestionarioViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     CuestionarioScreen(
         vista = state.vista,
@@ -68,56 +72,51 @@ fun CuestionarioRoute(
         mostrarDialogoContacto = state.mostrarDialogoContacto,
 
         onRespuestaSeleccionada = {
-
             viewModel.onEvent(
                 CuestionarioEvent.Respuesta(it)
             )
         },
 
         onSiguienteClick = {
-
             viewModel.onEvent(
                 CuestionarioEvent.Siguiente
             )
         },
 
         onCerrarClick = {
-
             viewModel.onEvent(
                 CuestionarioEvent.Cerrar
             )
+            onCerrarClick()
         },
 
         onContinuarClick = {
-
             viewModel.onEvent(
                 CuestionarioEvent.Continuar
             )
+            onContinuarClick()
         },
 
         onVolverInicioClick = {
-
             viewModel.onEvent(
                 CuestionarioEvent.Inicio
             )
+            onVolverInicioClick()
         },
 
         onConsultarInstitucionClick = {
-
             viewModel.onEvent(
                 CuestionarioEvent.Mostrar
             )
         },
 
         onLlamarClick = {
-
             viewModel.onEvent(
                 CuestionarioEvent.Ocultar
             )
         },
 
         onCancelarDialogoClick = {
-
             viewModel.onEvent(
                 CuestionarioEvent.Ocultar
             )
@@ -126,7 +125,6 @@ fun CuestionarioRoute(
         modifier = modifier
     )
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CuestionarioScreen(

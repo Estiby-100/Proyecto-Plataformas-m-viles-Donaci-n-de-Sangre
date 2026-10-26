@@ -1,69 +1,53 @@
 package com.uvg.gotavida.ui.donante.cuestionario
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.uvg.gotavida.data.fake.FakePreguntasDataSource
-import com.uvg.gotavida.data.model.RespuestaElegibilidad
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class CuestionarioViewModel : ViewModel() {
 
-    var state by mutableStateOf(
+    private val _state = MutableStateFlow(
         CuestionarioState(
             pregunta = FakePreguntasDataSource.obtenerPregunta(1)
         )
     )
-        private set
+    val state: StateFlow<CuestionarioState> = _state.asStateFlow()
 
     fun onEvent(event: CuestionarioEvent) {
 
         when (event) {
 
             is CuestionarioEvent.Respuesta -> {
-
-                state = state.copy(
-                    respuestaSeleccionada = event.respuesta
-                )
+                _state.update { it.copy(respuestaSeleccionada = event.respuesta) }
             }
 
             CuestionarioEvent.Siguiente -> {
-
-                val preguntaActual = state.pregunta
-
-                if (state.numeroPregunta < preguntaActual.total) {
-
-                    val siguiente = state.numeroPregunta + 1
-
-                    state = state.copy(
-                        numeroPregunta = siguiente,
-                        pregunta = FakePreguntasDataSource
-                            .obtenerPregunta(siguiente),
-                        respuestaSeleccionada = null
-                    )
-
-                } else {
-
-                    state = state.copy(
-                        vista = VistaCuestionario.RESULTADO_APTO
-                    )
+                _state.update { actual ->
+                    if (actual.numeroPregunta < actual.pregunta.total) {
+                        val siguiente = actual.numeroPregunta + 1
+                        actual.copy(
+                            numeroPregunta = siguiente,
+                            pregunta = FakePreguntasDataSource.obtenerPregunta(siguiente),
+                            respuestaSeleccionada = null
+                        )
+                    } else {
+                        actual.copy(vista = VistaCuestionario.RESULTADO_APTO)
+                    }
                 }
             }
 
             CuestionarioEvent.Mostrar -> {
-
-                state = state.copy(
-                    mostrarDialogoContacto = true
-                )
+                _state.update { it.copy(mostrarDialogoContacto = true) }
             }
 
             CuestionarioEvent.Ocultar -> {
-
-                state = state.copy(
-                    mostrarDialogoContacto = false
-                )
+                _state.update { it.copy(mostrarDialogoContacto = false) }
             }
 
+            // Solo navegan; no cambian el estado.
             CuestionarioEvent.Continuar -> Unit
             CuestionarioEvent.Inicio -> Unit
             CuestionarioEvent.Cerrar -> Unit

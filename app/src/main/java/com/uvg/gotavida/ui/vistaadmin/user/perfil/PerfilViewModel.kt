@@ -1,16 +1,15 @@
 package com.uvg.gotavida.ui.vistaadmin.user.perfil
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.uvg.gotavida.di.ServiceLocator
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class PerfilViewModel : ViewModel() {
 
-    var state by mutableStateOf(
-        PerfilState()
-    )
-        private set
+    private val _state = MutableStateFlow(PerfilState())
+    val state: StateFlow<PerfilState> = _state.asStateFlow()
 
     fun onEvent(
         event: PerfilEvent
@@ -18,13 +17,13 @@ class PerfilViewModel : ViewModel() {
 
         when (event) {
 
-            PerfilEvent.BackClick -> {
-                // navegación
-            }
+            // El repositorio se pide aquí y no en el constructor para que el
+            // @Preview del perfil no necesite Firebase ni Room.
+            PerfilEvent.CerrarSesion -> ServiceLocator.cuentaRepository.cerrarSesion()
 
-            PerfilEvent.CerrarSesion -> {
-                // navegacion
-            }
+            // Solo navegan; no cambian el estado.
+            PerfilEvent.BackClick -> Unit
+            PerfilEvent.Ajustes -> Unit
         }
     }
 }

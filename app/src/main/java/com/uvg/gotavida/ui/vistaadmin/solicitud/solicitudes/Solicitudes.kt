@@ -9,6 +9,12 @@ import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import com.uvg.gotavida.ui.vistaadmin.solicitud.solicitudes.SolicitudesCreadasEvent
+import com.uvg.gotavida.ui.vistaadmin.solicitud.solicitudes.SolicitudesViewModel
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,54 +36,22 @@ data class SolicitudCreada(
 
 @Composable
 fun SolicitudesScreen(
+    viewModel: SolicitudesViewModel = viewModel(),
     onBackClick: () -> Unit = {},
     onCerrarSolicitud: (SolicitudCreada) -> Unit = {},
     onAsignarSolicitud: (SolicitudCreada) -> Unit = {}
 ) {
-    val solicitudes = listOf(
-
-        SolicitudCreada(
-            nombre = "Hospital Roosevelt",
-            ubicacion = "Guatemala",
-            tipoSangre = "O-",
-        ),
-
-        SolicitudCreada(
-            nombre = "Hospital San Juan de Dios",
-            ubicacion = "Guatemala",
-            tipoSangre = "A+"
-        ),
-
-        SolicitudCreada(
-            nombre = "Hospital Regional de Quetzaltenango",
-            ubicacion = "Quetzaltenango",
-            tipoSangre = "B+"
-        ),
-
-        SolicitudCreada(
-            nombre = "IGSS Zona 9",
-            ubicacion = "Guatemala",
-            tipoSangre = "AB-"
-        ),
-
-        SolicitudCreada(
-            nombre = "Hospital Nacional de Escuintla",
-            ubicacion = "Escuintla",
-            tipoSangre = "O+"
-        ),
-
-        SolicitudCreada(
-            nombre = "Hospital de Cobán",
-            ubicacion = "Alta Verapaz",
-            tipoSangre = "A-"
-        )
-    )
+    val state by viewModel.state.collectAsState()
+    val solicitudes = state.solicitudes
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             SolicitudesTopBar(
-                onBackClick = onBackClick
+                onBackClick = {
+                    viewModel.onEvent(SolicitudesCreadasEvent.BackClick)
+                    onBackClick()
+                }
             )
         },
     ) { padding ->
@@ -94,6 +68,7 @@ fun SolicitudesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
+                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = 20.dp)
             ) {
 
@@ -104,9 +79,11 @@ fun SolicitudesScreen(
                     SolicitudCard(
                         solicitud = solicitud,
                         onCerrarSolicitud = {
+                            viewModel.onEvent(SolicitudesCreadasEvent.CerrarSolicitud(solicitud))
                             onCerrarSolicitud(solicitud)
                         },
                         onAsignarSolicitud = {
+                            viewModel.onEvent(SolicitudesCreadasEvent.AsignarSolicitud(solicitud))
                             onAsignarSolicitud(solicitud)
                         }
                     )

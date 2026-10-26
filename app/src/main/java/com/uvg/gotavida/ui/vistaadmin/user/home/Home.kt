@@ -10,6 +10,10 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,9 +41,11 @@ fun bloodColorFor(key: BloodColorKey): Color {
 fun BloodDonationScreen(
     viewModel: HomeViewModel = viewModel(),
     onCrearSolicitud: () -> Unit = {},
-    onVerSolicitudes: () -> Unit = {}
+    onVerSolicitudes: () -> Unit = {},
+    onPerfilClick: () -> Unit = {},
+    onNotificacionesClick: () -> Unit = {}
 ) {
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -51,8 +57,18 @@ fun BloodDonationScreen(
                 .padding(horizontal = 20.dp)
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            Header(userName = state.userName,
-                location = state.location)
+            Header(
+                userName = state.userName,
+                location = state.location,
+                onPerfilClick = {
+                    viewModel.onEvent(HomeEvent.Perfil)
+                    onPerfilClick()
+                },
+                onNotificacionesClick = {
+                    viewModel.onEvent(HomeEvent.Notificaciones)
+                    onNotificacionesClick()
+                }
+            )
             Spacer(modifier = Modifier.height(20.dp))
             CreateRequest(
                 onCreateClick = {
@@ -82,7 +98,12 @@ fun BloodDonationScreen(
 }
 
 @Composable
-fun Header(userName: String, location: String) {
+fun Header(
+    userName: String,
+    location: String,
+    onPerfilClick: () -> Unit = {},
+    onNotificacionesClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -92,7 +113,8 @@ fun Header(userName: String, location: String) {
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .clickable(onClick = onPerfilClick),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -101,6 +123,7 @@ fun Header(userName: String, location: String) {
                 tint = MaterialTheme.colorScheme.onSurface
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = "¡Hola, $userName!",
@@ -122,6 +145,13 @@ fun Header(userName: String, location: String) {
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
+        }
+        IconButton(onClick = onNotificacionesClick) {
+            Icon(
+                Icons.Filled.Notifications,
+                contentDescription = "Notificaciones",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }

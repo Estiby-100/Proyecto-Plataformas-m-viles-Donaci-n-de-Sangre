@@ -10,6 +10,7 @@ data class AjustesUiState(
 )
 
 sealed interface AjustesEvent {
+    data class RolAsignado(val rol: RolCuenta) : AjustesEvent
     data object Editar : AjustesEvent
     data object CambiarContrasena : AjustesEvent
     data object Correo : AjustesEvent

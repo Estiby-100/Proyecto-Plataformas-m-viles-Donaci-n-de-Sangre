@@ -47,19 +47,23 @@ import com.uvg.gotavida.ui.donante.common.ChipUrgencia
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun DetalleSolicitudRoute(
     solicitudId: String,
+    onPuedoDonarClick: () -> Unit,
+    onVerEnMapaClick: () -> Unit,
+    onAtrasClick: () -> Unit,
     viewModel: DetalleSolicitudViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
 
     LaunchedEffect(solicitudId) {
-        viewModel.cargarSolicitud(solicitudId)
+        viewModel.onEvent(DetalleSolicitudEvent.Cargar(solicitudId))
     }
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     DetalleSolicitudScreen(
         solicitud = state.solicitud,
@@ -71,6 +75,7 @@ fun DetalleSolicitudRoute(
             viewModel.onEvent(
                 DetalleSolicitudEvent.Donar
             )
+            onPuedoDonarClick()
         },
 
         onNoPuedoDonarClick = {
@@ -83,6 +88,7 @@ fun DetalleSolicitudRoute(
             viewModel.onEvent(
                 DetalleSolicitudEvent.Confirmar
             )
+            onAtrasClick()
         },
 
         onVolverDialogoRechazo = {
@@ -95,18 +101,19 @@ fun DetalleSolicitudRoute(
             viewModel.onEvent(
                 DetalleSolicitudEvent.Mapa
             )
+            onVerEnMapaClick()
         },
 
         onAtrasClick = {
             viewModel.onEvent(
                 DetalleSolicitudEvent.Atras
             )
+            onAtrasClick()
         },
 
         modifier = modifier
     )
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetalleSolicitudScreen(

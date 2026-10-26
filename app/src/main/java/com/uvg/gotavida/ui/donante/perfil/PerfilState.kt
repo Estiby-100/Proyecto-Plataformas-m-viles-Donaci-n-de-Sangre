@@ -16,4 +16,5 @@ sealed interface PerfilEvent {
     data class Disponibilidad(
         val disponible: Boolean
     ) : PerfilEvent
+    data object Ajustes : PerfilEvent
 }

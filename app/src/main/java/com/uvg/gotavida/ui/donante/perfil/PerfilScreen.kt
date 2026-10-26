@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Lock
@@ -50,14 +52,16 @@ import com.uvg.gotavida.data.model.ItemHistorial
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.WarningAccessible
 import com.uvg.gotavida.ui.theme.WarningContainer
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun PerfilRoute(
+    onAjustesClick: () -> Unit,
     viewModel: PerfilViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     PerfilScreen(
         nombre = state.nombre,
@@ -73,10 +77,16 @@ fun PerfilRoute(
             )
         },
 
+        onAjustesClick = {
+            viewModel.onEvent(
+                PerfilEvent.Ajustes
+            )
+            onAjustesClick()
+        },
+
         modifier = modifier
     )
 }
-
 @Composable
 fun PerfilScreen(
     nombre: String,
@@ -86,7 +96,8 @@ fun PerfilScreen(
     insignias: List<Insignia>,
     cargando: Boolean,
     onDisponibleChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAjustesClick: () -> Unit = {}
 ) {
     Scaffold(modifier = modifier) { paddingValues ->
         if (cargando) {
@@ -116,7 +127,8 @@ fun PerfilScreen(
                     nombre = nombre,
                     tipoSangre = tipoSangre,
                     disponible = disponible,
-                    onDisponibleChange = onDisponibleChange
+                    onDisponibleChange = onDisponibleChange,
+                    onAjustesClick = onAjustesClick
                 )
             }
 
@@ -240,6 +252,7 @@ private fun EncabezadoPerfil(
     tipoSangre: String,
     disponible: Boolean,
     onDisponibleChange: (Boolean) -> Unit,
+    onAjustesClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -280,6 +293,13 @@ private fun EncabezadoPerfil(
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                         )
                     }
+                }
+                IconButton(onClick = onAjustesClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Ajustes",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
 

@@ -1,19 +1,21 @@
 package com.uvg.gotavida.ui.shared.ajustes
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.uvg.gotavida.data.model.RolCuenta
+import com.uvg.gotavida.data.auth.CuentaRepository
+import com.uvg.gotavida.di.ServiceLocator
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class AjustesViewModel : ViewModel() {
 
-    var state by mutableStateOf(
-        AjustesUiState(
-            rol = RolCuenta.DONANTE
-        )
-    )
-        private set
+    // Se pide solo al cerrar sesión, así los @Preview de AjustesScreen
+    // (que crean este ViewModel) no necesitan Firebase ni Room.
+    private val cuentas: CuentaRepository by lazy { ServiceLocator.cuentaRepository }
+
+    private val _state = MutableStateFlow(AjustesUiState())
+    val state: StateFlow<AjustesUiState> = _state.asStateFlow()
 
     fun onEvent(
         event: AjustesEvent
@@ -21,46 +23,44 @@ class AjustesViewModel : ViewModel() {
 
         when (event) {
 
-            AjustesEvent.TogglePush -> {
+            is AjustesEvent.RolAsignado -> {
+                _state.update { it.copy(rol = event.rol) }
+            }
 
-                state = state.copy(
-                    notificacionesPushEnabled =
-                        !state.notificacionesPushEnabled
-                )
+            AjustesEvent.TogglePush -> {
+                _state.update {
+                    it.copy(notificacionesPushEnabled = !it.notificacionesPushEnabled)
+                }
             }
 
             AjustesEvent.ToggleCorreo -> {
-
-                state = state.copy(
-                    alertasCorreoEnabled =
-                        !state.alertasCorreoEnabled
-                )
+                _state.update {
+                    it.copy(alertasCorreoEnabled = !it.alertasCorreoEnabled)
+                }
             }
 
             AjustesEvent.MostrarDialogo -> {
-
-                state = state.copy(
-                    showLogoutDialog = true
-                )
+                _state.update { it.copy(showLogoutDialog = true) }
             }
 
             AjustesEvent.OcultarDialogo -> {
-
-                state = state.copy(
-                    showLogoutDialog = false
-                )
+                _state.update { it.copy(showLogoutDialog = false) }
             }
 
             AjustesEvent.Confirmar -> {
-
-                state = state.copy(
-                    showLogoutDialog = false
-                )
+                cuentas.cerrarSesion()
+                _state.update { it.copy(showLogoutDialog = false) }
             }
 
-            else -> {
-                // Navegacion
-            }
+            // Opciones sin pantalla todavía o que solo navegan.
+            AjustesEvent.Editar,
+            AjustesEvent.CambiarContrasena,
+            AjustesEvent.Correo,
+            AjustesEvent.Verificacion,
+            AjustesEvent.Privacidad,
+            AjustesEvent.Ayuda,
+            AjustesEvent.ReportarP,
+            AjustesEvent.BackClick -> Unit
         }
     }
 }

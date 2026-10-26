@@ -1,17 +1,56 @@
 package com.uvg.gotavida.ui.vistaadmin.solicitud.solicitudes
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.uvg.gotavida.vistaadmin.solicitud.solicitudes.SolicitudCreada
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class SolicitudesViewModel : ViewModel() {
 
-    var state by mutableStateOf(
-        SolicitudesState()
+    // Datos falsos de la entrega (antes estaban dentro de SolicitudesScreen).
+    private val ejemplos = listOf(
+
+        SolicitudCreada(
+            nombre = "Hospital Roosevelt",
+            ubicacion = "Guatemala",
+            tipoSangre = "O-",
+        ),
+
+        SolicitudCreada(
+            nombre = "Hospital San Juan de Dios",
+            ubicacion = "Guatemala",
+            tipoSangre = "A+"
+        ),
+
+        SolicitudCreada(
+            nombre = "Hospital Regional de Quetzaltenango",
+            ubicacion = "Quetzaltenango",
+            tipoSangre = "B+"
+        ),
+
+        SolicitudCreada(
+            nombre = "IGSS Zona 9",
+            ubicacion = "Guatemala",
+            tipoSangre = "AB-"
+        ),
+
+        SolicitudCreada(
+            nombre = "Hospital Nacional de Escuintla",
+            ubicacion = "Escuintla",
+            tipoSangre = "O+"
+        ),
+
+        SolicitudCreada(
+            nombre = "Hospital de Cobán",
+            ubicacion = "Alta Verapaz",
+            tipoSangre = "A-"
+        )
     )
-        private set
+
+    private val _state = MutableStateFlow(SolicitudesState())
+    val state: StateFlow<SolicitudesState> = _state.asStateFlow()
 
     init {
         onEvent(
@@ -26,24 +65,23 @@ class SolicitudesViewModel : ViewModel() {
         when (event) {
 
             SolicitudesCreadasEvent.CargarSolicitudes -> {
-
-                state = state.copy(
-                    cargando = false,
-                    solicitudes = emptyList()
-                )
+                _state.update {
+                    it.copy(cargando = false, solicitudes = ejemplos)
+                }
             }
 
-            is SolicitudesCreadasEvent.CerrarSolicitud -> {
-                // futura implementación
-            }
+            // Al cerrar o asignar, la solicitud sale de la lista activa.
+            is SolicitudesCreadasEvent.CerrarSolicitud -> quitar(event.solicitud)
 
-            is SolicitudesCreadasEvent.AsignarSolicitud -> {
-                // futura implementación
-            }
+            is SolicitudesCreadasEvent.AsignarSolicitud -> quitar(event.solicitud)
 
-            SolicitudesCreadasEvent.BackClick -> {
-                // futura implementación
-            }
+            SolicitudesCreadasEvent.BackClick -> Unit
+        }
+    }
+
+    private fun quitar(solicitud: SolicitudCreada) {
+        _state.update {
+            it.copy(solicitudes = it.solicitudes - solicitud)
         }
     }
 }

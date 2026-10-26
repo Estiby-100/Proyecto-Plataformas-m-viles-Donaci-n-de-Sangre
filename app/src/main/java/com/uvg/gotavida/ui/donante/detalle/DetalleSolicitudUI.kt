@@ -8,6 +8,9 @@ data class DetalleSolicitudState(
 )
 
 sealed interface DetalleSolicitudEvent {
+    data class Cargar(
+        val solicitudId: String
+    ) : DetalleSolicitudEvent
     data object DialogoRechazo : DetalleSolicitudEvent
     data object Ocultar : DetalleSolicitudEvent
     data object Confirmar : DetalleSolicitudEvent

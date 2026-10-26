@@ -1,30 +1,27 @@
 package com.uvg.gotavida.splash
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SplashViewModel : ViewModel() {
 
-    var state by mutableStateOf(SplashState())
-        private set
+    private val _state = MutableStateFlow(SplashState())
+    val state: StateFlow<SplashState> = _state.asStateFlow()
 
     init {
-        Splash()
+        iniciar()
     }
 
-    private fun Splash() {
+    private fun iniciar() {
         viewModelScope.launch {
-
             delay(2000)
-
-            state = state.copy(
-                isLoading = false
-            )
+            _state.update { it.copy(isLoading = false) }
         }
     }
 }

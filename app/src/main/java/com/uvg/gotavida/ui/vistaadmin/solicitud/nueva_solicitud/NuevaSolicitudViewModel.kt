@@ -1,66 +1,44 @@
 package com.uvg.gotavida.ui.vistaadmin.solicitud.nueva_solicitud
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class NuevaSolicitudViewModel : ViewModel() {
 
-    var state by mutableStateOf(
-        NuevaSolicitudState()
-    )
-        private set
+    private val _state = MutableStateFlow(NuevaSolicitudState())
+    val state: StateFlow<NuevaSolicitudState> = _state.asStateFlow()
 
     fun onEvent(event: NuevaSolicitudEvent) {
 
         when (event) {
 
             is NuevaSolicitudEvent.NombreChanged -> {
-                state = state.copy(
-                    nombreCompleto = event.nombre
-                )
+                _state.update { it.copy(nombreCompleto = event.nombre) }
             }
 
             is NuevaSolicitudEvent.TipoSangreChanged -> {
-                state = state.copy(
-                    tipoSangre = event.tipo
-                )
+                _state.update { it.copy(tipoSangre = event.tipo) }
             }
 
             is NuevaSolicitudEvent.SignoChanged -> {
-                state = state.copy(
-                    signo = event.signo
-                )
+                _state.update { it.copy(signo = event.signo) }
             }
 
             is NuevaSolicitudEvent.DepartamentoChanged -> {
-                state = state.copy(
-                    departamento = event.departamento
-                )
+                _state.update { it.copy(departamento = event.departamento) }
             }
 
             is NuevaSolicitudEvent.DetallesChanged -> {
-                state = state.copy(
-                    detalles = event.detalles
-                )
+                _state.update { it.copy(detalles = event.detalles) }
             }
 
-            NuevaSolicitudEvent.EnviarSolicitud -> {
-                enviarSolicitud()
-            }
+            // Con datos falsos, enviar solo navega a la lista de solicitudes.
+            NuevaSolicitudEvent.EnviarSolicitud -> Unit
 
-            NuevaSolicitudEvent.BackClick -> {
-                volverAtras()
-            }
+            NuevaSolicitudEvent.BackClick -> Unit
         }
-    }
-
-    private fun enviarSolicitud() {
-        // Implementar en futuras fases
-    }
-
-    private fun volverAtras() {
-        // Implementar en futuras fases
     }
 }

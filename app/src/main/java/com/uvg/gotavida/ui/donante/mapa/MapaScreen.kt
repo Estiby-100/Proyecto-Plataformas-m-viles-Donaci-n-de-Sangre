@@ -51,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uvg.gotavida.data.fake.FakeLugaresDataSource
 import com.uvg.gotavida.data.model.LugarMapa
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
+import androidx.compose.runtime.collectAsState
 
 private enum class VistaMapa { MAPA, LISTA }
 
@@ -60,7 +61,7 @@ fun MapaRoute(
     modifier: Modifier = Modifier
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     MapaScreen(
         lugares = state.lugares,
@@ -97,7 +98,6 @@ fun MapaRoute(
         modifier = modifier
     )
 }
-
 @Composable
 fun MapaScreen(
     lugares: List<LugarMapa>,

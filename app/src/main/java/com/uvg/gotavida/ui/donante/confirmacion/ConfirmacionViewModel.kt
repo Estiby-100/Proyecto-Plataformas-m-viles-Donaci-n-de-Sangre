@@ -1,63 +1,54 @@
 package com.uvg.gotavida.ui.donante.confirmacion
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.uvg.gotavida.data.fake.FakeSolicitudesDataSource
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class ConfirmacionViewModel : ViewModel() {
 
-    var state by mutableStateOf(
-        ConfirmacionUiState(
-            solicitud =
-                FakeSolicitudesDataSource
-                    .obtenerSolicitudesUrgentesCompatibles()
-                    .first()
-        )
-    )
-        private set
+    private val _state = MutableStateFlow(ConfirmacionUiState())
+    val state: StateFlow<ConfirmacionUiState> = _state.asStateFlow()
 
     fun onEvent(event: ConfirmacionEvent) {
 
         when (event) {
 
-            ConfirmacionEvent.MostrarContacto -> {
+            is ConfirmacionEvent.Cargar -> {
+                _state.update {
+                    it.copy(
+                        solicitud = FakeSolicitudesDataSource
+                            .obtenerSolicitudPorId(event.solicitudId)
+                    )
+                }
+            }
 
-                state = state.copy(
-                    mostrarDialogoContacto = true
-                )
+            ConfirmacionEvent.MostrarContacto -> {
+                _state.update { it.copy(mostrarDialogoContacto = true) }
             }
 
             ConfirmacionEvent.OcultarContacto -> {
-
-                state = state.copy(
-                    mostrarDialogoContacto = false
-                )
+                _state.update { it.copy(mostrarDialogoContacto = false) }
             }
 
             ConfirmacionEvent.Mostrar -> {
-
-                state = state.copy(
-                    mostrarDialogoCancelar = true
-                )
+                _state.update { it.copy(mostrarDialogoCancelar = true) }
             }
 
             ConfirmacionEvent.Ocultar -> {
-
-                state = state.copy(
-                    mostrarDialogoCancelar = false
-                )
+                _state.update { it.copy(mostrarDialogoCancelar = false) }
             }
 
             ConfirmacionEvent.Confirmar -> {
-
-                state = state.copy(
-                    mostrarDialogoCancelar = false
-                )
+                _state.update { it.copy(mostrarDialogoCancelar = false) }
             }
 
-            else -> Unit
+            // Solo navegan; no cambian el estado.
+            ConfirmacionEvent.Mapa -> Unit
+            ConfirmacionEvent.Llamar -> Unit
+            ConfirmacionEvent.Entendido -> Unit
         }
     }
 }

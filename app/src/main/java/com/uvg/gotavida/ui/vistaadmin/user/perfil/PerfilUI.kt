@@ -29,4 +29,5 @@ sealed interface PerfilEvent {
 
     data object BackClick : PerfilEvent
     data object CerrarSesion : PerfilEvent
+    data object Ajustes : PerfilEvent
 }

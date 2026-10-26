@@ -1,21 +1,18 @@
 package com.uvg.gotavida.ui.vistaadmin.solicitud.cerrada_asignada
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CerradaAsignadaViewModel : ViewModel() {
 
-    var state by mutableStateOf(
-        CerradaAsignadaState(
-            isLoading = true
-        )
-    )
-        private set
+    private val _state = MutableStateFlow(CerradaAsignadaState(isLoading = true))
+    val state: StateFlow<CerradaAsignadaState> = _state.asStateFlow()
 
     init {
         cargarPantalla()
@@ -23,20 +20,15 @@ class CerradaAsignadaViewModel : ViewModel() {
 
     fun onEvent(event: CerradaAsignadaEvent) {
         when (event) {
-            CerradaAsignadaEvent.BackClick -> {
-
-            }
+            // Solo navega al dashboard; no cambia el estado.
+            CerradaAsignadaEvent.BackClick -> Unit
         }
     }
 
     private fun cargarPantalla() {
         viewModelScope.launch {
-
             delay(2000)
-
-            state = state.copy(
-                isLoading = false
-            )
+            _state.update { it.copy(isLoading = false) }
         }
     }
 }

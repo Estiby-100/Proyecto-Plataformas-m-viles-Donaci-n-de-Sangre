@@ -9,6 +9,9 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,9 +29,10 @@ import com.uvg.gotavida.ui.vistaadmin.user.perfil.PerfilEvent
 fun PerfilScreen(
     viewModel: PerfilViewModel = viewModel(),
     onBackClick: () -> Unit = {},
-    onCerrarSesion: () -> Unit = {}
+    onCerrarSesion: () -> Unit = {},
+    onAjustesClick: () -> Unit = {}
 ) {
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -53,6 +57,18 @@ fun PerfilScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        viewModel.onEvent(PerfilEvent.Ajustes)
+                        onAjustesClick()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Ajustes",
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }

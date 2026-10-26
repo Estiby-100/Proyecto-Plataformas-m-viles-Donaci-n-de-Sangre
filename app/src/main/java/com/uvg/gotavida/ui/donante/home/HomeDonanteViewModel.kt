@@ -1,17 +1,16 @@
 package com.uvg.gotavida.ui.donante.home
 
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import com.uvg.gotavida.data.fake.FakeSolicitudesDataSource
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class HomeDonanteViewModel : ViewModel() {
 
-    var state by mutableStateOf(
-        HomeDonanteState()
-    )
-        private set
+    private val _state = MutableStateFlow(HomeDonanteState())
+    val state: StateFlow<HomeDonanteState> = _state.asStateFlow()
 
     init {
         cargarFeed()
@@ -22,27 +21,18 @@ class HomeDonanteViewModel : ViewModel() {
         when (event) {
 
             is HomeDonanteEvent.Disponibilidad -> {
-
-                state = state.copy(
-                    disponible = event.disponible
-                )
+                _state.update { it.copy(disponible = event.disponible) }
             }
 
             is HomeDonanteEvent.Filtro -> {
-
-                state = state.copy(
-                    filtroSeleccionado = event.filtro
-                )
-
+                _state.update { it.copy(filtroSeleccionado = event.filtro) }
                 cargarFeed()
             }
 
-            HomeDonanteEvent.Cargar -> {
-                cargarFeed()
-            }
+            HomeDonanteEvent.Cargar -> cargarFeed()
 
+            // Solo navegan; no cambian el estado.
             HomeDonanteEvent.Notificaciones -> Unit
-
             is HomeDonanteEvent.Detalle -> Unit
         }
     }
@@ -57,36 +47,32 @@ class HomeDonanteViewModel : ViewModel() {
             FakeSolicitudesDataSource
                 .obtenerJornadasCercanas()
 
-        val solicitudesAMostrar =
-            when (state.filtroSeleccionado) {
+        _state.update { actual ->
 
-                FiltroFeed.JORNADAS -> emptyList()
+            val solicitudesAMostrar =
+                when (actual.filtroSeleccionado) {
+                    FiltroFeed.JORNADAS -> emptyList()
+                    else -> solicitudes
+                }
 
-                else -> solicitudes
-            }
+            val jornadasAMostrar =
+                when (actual.filtroSeleccionado) {
+                    FiltroFeed.SOLICITUDES -> emptyList()
+                    else -> jornadas
+                }
 
-        val jornadasAMostrar =
-            when (state.filtroSeleccionado) {
+            val estado =
+                if (solicitudesAMostrar.isEmpty() && jornadasAMostrar.isEmpty()) {
+                    EstadoFeed.VACIO
+                } else {
+                    EstadoFeed.CON_CONTENIDO
+                }
 
-                FiltroFeed.SOLICITUDES -> emptyList()
-
-                else -> jornadas
-            }
-
-        val estado =
-            if (
-                solicitudesAMostrar.isEmpty()
-                && jornadasAMostrar.isEmpty()
-            ) {
-                EstadoFeed.VACIO
-            } else {
-                EstadoFeed.CON_CONTENIDO
-            }
-
-        state = state.copy(
-            estado = estado,
-            urgentes = solicitudesAMostrar,
-            jornadas = jornadasAMostrar
-        )
+            actual.copy(
+                estado = estado,
+                urgentes = solicitudesAMostrar,
+                jornadas = jornadasAMostrar
+            )
+        }
     }
 }

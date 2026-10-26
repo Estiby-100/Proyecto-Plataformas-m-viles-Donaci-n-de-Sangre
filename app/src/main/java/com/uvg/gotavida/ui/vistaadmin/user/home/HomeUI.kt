@@ -26,4 +26,8 @@ sealed interface HomeEvent {
     data object CrearSolicitud : HomeEvent
 
     data object VerSolicitudes : HomeEvent
+
+    data object Perfil : HomeEvent
+
+    data object Notificaciones : HomeEvent
 }

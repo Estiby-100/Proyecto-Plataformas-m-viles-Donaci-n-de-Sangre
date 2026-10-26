@@ -50,6 +50,7 @@ import com.uvg.gotavida.ui.donante.common.DonanteTab
 import com.uvg.gotavida.ui.donante.common.SolicitudCard
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
 
 enum class FiltroFeed {
     TODAS,
@@ -66,11 +67,14 @@ enum class EstadoFeed {
 
 @Composable
 fun HomeDonanteRoute(
+    onVerDetalle: (String) -> Unit,
+    onNotificacionesClick: () -> Unit,
+    onTabSeleccionado: (DonanteTab) -> Unit,
     viewModel: HomeDonanteViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
 
     HomeDonanteScreen(
         estado = state.estado,
@@ -91,26 +95,27 @@ fun HomeDonanteRoute(
             )
         },
 
-        onVerDetalle = {
+        onVerDetalle = { solicitudId ->
             viewModel.onEvent(
-                HomeDonanteEvent.Detalle(it)
+                HomeDonanteEvent.Detalle(solicitudId)
             )
+            onVerDetalle(solicitudId)
         },
 
         onNotificacionesClick = {
             viewModel.onEvent(
                 HomeDonanteEvent.Notificaciones
             )
+            onNotificacionesClick()
         },
 
         tabSeleccionado = DonanteTab.HOME,
 
-        onTabSeleccionado = {},
+        onTabSeleccionado = onTabSeleccionado,
 
         modifier = modifier
     )
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeDonanteScreen(

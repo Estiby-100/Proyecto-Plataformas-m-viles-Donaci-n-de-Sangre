@@ -10,10 +10,13 @@ data class NotificacionesState(
 )
 
 sealed interface NotificacionesEvent {
-    data object Cargar : NotificacionesEvent
+    /** Carga las notificaciones del rol que llega por navegación. */
+    data class Cargar(
+        val rol: RolCuenta
+    ) : NotificacionesEvent
     data object Marcar : NotificacionesEvent
     data class Abrir(
-        val notificacion: Notificacion
+        val notificacionId: String
     ) : NotificacionesEvent
     data object BackClick : NotificacionesEvent
 }

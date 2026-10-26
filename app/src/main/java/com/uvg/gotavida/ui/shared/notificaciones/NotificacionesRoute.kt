@@ -1,25 +1,29 @@
 package com.uvg.gotavida.ui.shared.notificaciones
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.uvg.gotavida.data.fake.FakeNotificacionesDataSource
-import com.uvg.gotavida.data.model.RolCuenta
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.gotavida.data.model.RolCuenta
 
 /**
- * rol se recibirá más adelante desde la sesión real del usuario (quien haya
- * iniciado sesión). Por ahora, quien use este Route decide qué rol simular.
+ * El rol llega como argumento de navegación (desde el home de cada rol).
+ * Tocar una notificación solo la marca como leída: el modelo Notificacion
+ * no trae el id de la solicitud, así que todavía no hay a dónde llevarla.
  */
 @Composable
 fun NotificacionesRoute(
     rol: RolCuenta,
+    onBackClick: () -> Unit,
     viewModel: NotificacionesViewModel = viewModel()
 ) {
 
-    val state = viewModel.state
+    LaunchedEffect(rol) {
+        viewModel.onEvent(NotificacionesEvent.Cargar(rol))
+    }
+
+    val state by viewModel.state.collectAsState()
 
     NotificacionesScreen(
         uiState = state,
@@ -31,6 +35,7 @@ fun NotificacionesRoute(
         },
         onBackClick = {
             viewModel.onEvent(NotificacionesEvent.BackClick)
+            onBackClick()
         }
     )
 }
