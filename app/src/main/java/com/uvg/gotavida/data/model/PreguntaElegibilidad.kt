@@ -5,7 +5,9 @@ data class PreguntaElegibilidad(
     val numero: Int,
     val total: Int,
     val texto: String,
-    val ayuda: String? = null
+    val ayuda: String? = null,
+    /** Respuesta que hace que la persona no pueda donar por ahora. */
+    val respuestaNoApta: RespuestaElegibilidad = RespuestaElegibilidad.SI
 )
 
 enum class RespuestaElegibilidad {

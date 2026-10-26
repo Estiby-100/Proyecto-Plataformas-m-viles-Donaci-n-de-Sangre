@@ -8,7 +8,9 @@ data class CuestionarioState(
     val pregunta: PreguntaElegibilidad,
     val respuestaSeleccionada: RespuestaElegibilidad? = null,
     val vista: VistaCuestionario = VistaCuestionario.PREGUNTA,
-    val mostrarDialogoContacto: Boolean = false
+    val mostrarDialogoContacto: Boolean = false,
+    /** true si alguna respuesta impide donar; decide el resultado al final. */
+    val algunaRespuestaNoApta: Boolean = false
 )
 
 sealed interface CuestionarioEvent {

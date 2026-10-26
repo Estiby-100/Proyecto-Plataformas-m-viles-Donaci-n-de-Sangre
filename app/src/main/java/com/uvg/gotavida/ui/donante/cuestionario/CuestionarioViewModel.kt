@@ -26,15 +26,27 @@ class CuestionarioViewModel : ViewModel() {
 
             CuestionarioEvent.Siguiente -> {
                 _state.update { actual ->
+                    val respuesta = actual.respuestaSeleccionada ?: return@update actual
+                    val noApta = actual.algunaRespuestaNoApta ||
+                        respuesta == actual.pregunta.respuestaNoApta
+
                     if (actual.numeroPregunta < actual.pregunta.total) {
                         val siguiente = actual.numeroPregunta + 1
                         actual.copy(
                             numeroPregunta = siguiente,
                             pregunta = FakePreguntasDataSource.obtenerPregunta(siguiente),
-                            respuestaSeleccionada = null
+                            respuestaSeleccionada = null,
+                            algunaRespuestaNoApta = noApta
                         )
                     } else {
-                        actual.copy(vista = VistaCuestionario.RESULTADO_APTO)
+                        actual.copy(
+                            algunaRespuestaNoApta = noApta,
+                            vista = if (noApta) {
+                                VistaCuestionario.RESULTADO_NO_APTO
+                            } else {
+                                VistaCuestionario.RESULTADO_APTO
+                            }
+                        )
                     }
                 }
             }

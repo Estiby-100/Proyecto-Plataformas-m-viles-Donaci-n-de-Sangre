@@ -1,6 +1,7 @@
 package com.uvg.gotavida.data.fake
 
 import com.uvg.gotavida.data.model.PreguntaElegibilidad
+import com.uvg.gotavida.data.model.RespuestaElegibilidad
 
 object FakePreguntasDataSource {
 
@@ -16,14 +17,16 @@ object FakePreguntasDataSource {
             id = 2,
             numero = 2,
             total = 5,
-            texto = "¿Te sientes bien de salud hoy?"
+            texto = "¿Te sientes bien de salud hoy?",
+            respuestaNoApta = RespuestaElegibilidad.NO
         ),
         PreguntaElegibilidad(
             id = 3,
             numero = 3,
             total = 5,
             texto = "¿Pesas más de cierto mínimo?",
-            ayuda = "Pendiente de validación médica: el mínimo exacto no está definido."
+            ayuda = "Pendiente de validación médica: el mínimo exacto no está definido.",
+            respuestaNoApta = RespuestaElegibilidad.NO
         ),
         PreguntaElegibilidad(
             id = 4,
