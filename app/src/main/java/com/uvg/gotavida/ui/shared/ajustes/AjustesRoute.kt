@@ -1,7 +1,9 @@
 package com.uvg.gotavida.ui.shared.ajustes
 
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uvg.gotavida.data.model.RolCuenta
 
@@ -18,7 +20,7 @@ fun AjustesRoute(
 
     AjustesScreen(
         viewModel = viewModel,
-        // Estas opciones todavía no tienen pantalla propia.
+        // Estas opciones todavía no tienen pantalla propia: muestran un aviso.
         onEditarPerfilClick = { viewModel.onEvent(AjustesEvent.Editar) },
         onCambiarContrasenaClick = { viewModel.onEvent(AjustesEvent.CambiarContrasena) },
         onCorreoClick = { viewModel.onEvent(AjustesEvent.Correo) },
@@ -38,5 +40,8 @@ fun AjustesRoute(
             viewModel.onEvent(AjustesEvent.BackClick)
             onBackClick()
         },
+        onCerrarMensaje = { viewModel.onEvent(AjustesEvent.CerrarMensaje) },
+        // La pantalla no usa Scaffold: se separa de la barra de estado y de navegación.
+        modifier = Modifier.systemBarsPadding(),
     )
 }

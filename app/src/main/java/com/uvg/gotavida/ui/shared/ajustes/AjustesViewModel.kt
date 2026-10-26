@@ -52,15 +52,24 @@ class AjustesViewModel : ViewModel() {
                 _state.update { it.copy(showLogoutDialog = false) }
             }
 
-            // Opciones sin pantalla todavía o que solo navegan.
+            // Opciones que todavía no tienen pantalla propia.
             AjustesEvent.Editar,
             AjustesEvent.CambiarContrasena,
             AjustesEvent.Correo,
             AjustesEvent.Verificacion,
             AjustesEvent.Privacidad,
             AjustesEvent.Ayuda,
-            AjustesEvent.ReportarP,
+            AjustesEvent.ReportarP -> {
+                _state.update { it.copy(mensaje = PROXIMAMENTE) }
+            }
+
+            AjustesEvent.CerrarMensaje -> {
+                _state.update { it.copy(mensaje = null) }
+            }
+
             AjustesEvent.BackClick -> Unit
         }
     }
 }
+
+private const val PROXIMAMENTE = "Esta opción estará disponible en una próxima versión."

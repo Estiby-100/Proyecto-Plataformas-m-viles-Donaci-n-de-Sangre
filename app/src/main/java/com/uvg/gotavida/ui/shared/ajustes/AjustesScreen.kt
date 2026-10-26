@@ -53,6 +53,7 @@ fun AjustesScreen(
     onDismissLogoutDialog: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onCerrarMensaje: () -> Unit = {},
 ) {
     val uiState by viewModel.state.collectAsState()
 
@@ -88,18 +89,10 @@ fun AjustesScreen(
         SectionTitle("NOTIFICACIONES")
         SwitchRow("Recibir notificaciones push",
             uiState.notificacionesPushEnabled,
-            {
-            viewModel.onEvent(
-                AjustesEvent.TogglePush
-            )
-        })
+            { onTogglePush() })
         SwitchRow("Recibir alertas por correo",
             uiState.alertasCorreoEnabled,
-            {
-                viewModel.onEvent(
-                    AjustesEvent.ToggleCorreo
-                )
-            })
+            { onToggleCorreo() })
 
         SectionTitle("PRIVACIDAD")
         SettingsListItem(
@@ -117,10 +110,7 @@ fun AjustesScreen(
             text = "Cerrar sesión",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.clickable {
-                viewModel.onEvent(
-                AjustesEvent.MostrarDialogo
-            ) },
+            modifier = Modifier.clickable { onCerrarSesionClick() },
         )
 
         Spacer(Modifier.height(24.dp))
@@ -136,29 +126,28 @@ fun AjustesScreen(
 
     if (uiState.showLogoutDialog) {
         AlertDialog(
-            onDismissRequest = {
-                viewModel.onEvent(
-                    AjustesEvent.OcultarDialogo
-                )
-            },
+            onDismissRequest = onDismissLogoutDialog,
             title = { Text("¿Cerrar sesión?") },
             confirmButton = {
-                TextButton(onClick = {
-                    viewModel.onEvent(
-                        AjustesEvent.Confirmar
-                    )
-                }) {
+                TextButton(onClick = onConfirmarCerrarSesion) {
                     Text("Cerrar sesión", color = MaterialTheme.colorScheme.primary)
                 }
             },
             dismissButton = {
-                TextButton(onClick = {
-                    viewModel.onEvent(
-                        AjustesEvent.OcultarDialogo
-                    )
-                }) {
+                TextButton(onClick = onDismissLogoutDialog) {
                     Text("Cancelar")
                 }
+            },
+        )
+    }
+
+    uiState.mensaje?.let { mensaje ->
+        AlertDialog(
+            onDismissRequest = onCerrarMensaje,
+            title = { Text("Próximamente") },
+            text = { Text(mensaje) },
+            confirmButton = {
+                TextButton(onClick = onCerrarMensaje) { Text("Entendido") }
             },
         )
     }

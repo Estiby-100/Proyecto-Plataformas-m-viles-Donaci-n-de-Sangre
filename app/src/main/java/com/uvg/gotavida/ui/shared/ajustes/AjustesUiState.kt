@@ -7,6 +7,8 @@ data class AjustesUiState(
     val notificacionesPushEnabled: Boolean = true,
     val alertasCorreoEnabled: Boolean = false,
     val showLogoutDialog: Boolean = false,
+    /** Aviso para opciones que todavía no tienen pantalla propia. */
+    val mensaje: String? = null,
 )
 
 sealed interface AjustesEvent {
@@ -24,4 +26,5 @@ sealed interface AjustesEvent {
     data object Confirmar : AjustesEvent
     data object OcultarDialogo : AjustesEvent
     data object BackClick : AjustesEvent
+    data object CerrarMensaje : AjustesEvent
 }
