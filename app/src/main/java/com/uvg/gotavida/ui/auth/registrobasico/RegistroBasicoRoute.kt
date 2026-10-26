@@ -1,18 +1,31 @@
 package com.uvg.gotavida.ui.auth.registrobasico
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.gotavida.data.model.RolCuenta
 
 @Composable
 fun RegistroBasicoRoute(
+    rol: RolCuenta,
+    onCuentaCreada: () -> Unit,
+    onBackClick: () -> Unit,
     viewModel: RegistroBasicoViewModel = viewModel()
 ) {
 
-    val state = viewModel.state
+    LaunchedEffect(rol) {
+        viewModel.onEvent(RegistroBasicoEvent.RolAsignado(rol))
+    }
+
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(state.cuentaCreada) {
+        if (!state.cuentaCreada) return@LaunchedEffect
+        viewModel.onEvent(RegistroBasicoEvent.NavegacionAtendida)
+        onCuentaCreada()
+    }
 
     RegistroBasicoScreen(
 
@@ -70,6 +83,7 @@ fun RegistroBasicoRoute(
             viewModel.onEvent(
                 RegistroBasicoEvent.Back
             )
+            onBackClick()
         },
 
         onTermsClick = {

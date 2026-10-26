@@ -12,6 +12,8 @@ data class RegistroMedicaUiState(
     val numeroColegiado: String = "",
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    /** true después de "Volver al inicio": la sesión ya se cerró y la vista vuelve a Splash. */
+    val volverAlInicio: Boolean = false,
 ) {
     val isContinueEnabled: Boolean
         get() = nombreInstitucion.isNotBlank() && correoInstitucional.isNotBlank() && !isLoading
@@ -30,4 +32,5 @@ sealed interface RegistroMedicaEvent {
     data object Enviar : RegistroMedicaEvent
     data object Inicio : RegistroMedicaEvent
     data object Back : RegistroMedicaEvent
+    data object NavegacionAtendida : RegistroMedicaEvent
 }

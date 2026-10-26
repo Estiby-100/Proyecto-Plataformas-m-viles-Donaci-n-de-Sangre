@@ -1,26 +1,35 @@
 package com.uvg.gotavida.ui.auth.registromedica
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun RegistroMedicaRoute() {
-    var uiState by remember { mutableStateOf(RegistroMedicaUiState()) }
+fun RegistroMedicaRoute(
+    onVolverAlInicio: () -> Unit,
+    onBackClick: () -> Unit,
+    viewModel: RegistroMedicaViewModel = viewModel()
+) {
+    val uiState by viewModel.state.collectAsState()
+
+    LaunchedEffect(uiState.volverAlInicio) {
+        if (!uiState.volverAlInicio) return@LaunchedEffect
+        viewModel.onEvent(RegistroMedicaEvent.NavegacionAtendida)
+        onVolverAlInicio()
+    }
 
     RegistroMedicaScreen(
         uiState = uiState,
-        onNombreInstitucionChange = { uiState = uiState.copy(nombreInstitucion = it) },
-        onCorreoInstitucionalChange = { uiState = uiState.copy(correoInstitucional = it) },
-        onNumeroColegiadoChange = { uiState = uiState.copy(numeroColegiado = it) },
-        onEnviarClick = {
-            // TODO: enviar a revisión real. Por ahora, solo cambia de fase para
-            // poder ver el estado "en revisión" al correr la app.
-            uiState = uiState.copy(fase = RegistroMedicaFase.EN_REVISION)
+        onNombreInstitucionChange = { viewModel.onEvent(RegistroMedicaEvent.Institucion(it)) },
+        onCorreoInstitucionalChange = { viewModel.onEvent(RegistroMedicaEvent.Correo(it)) },
+        onNumeroColegiadoChange = { viewModel.onEvent(RegistroMedicaEvent.NumeroColegiado(it)) },
+        onEnviarClick = { viewModel.onEvent(RegistroMedicaEvent.Enviar) },
+        onVolverAlInicioClick = { viewModel.onEvent(RegistroMedicaEvent.Inicio) },
+        onBackClick = {
+            viewModel.onEvent(RegistroMedicaEvent.Back)
+            onBackClick()
         },
-        onVolverAlInicioClick = { /* TODO: navegar a Splash */ },
-        onBackClick = { /* TODO: navegar a Registro básico */ },
     )
 }

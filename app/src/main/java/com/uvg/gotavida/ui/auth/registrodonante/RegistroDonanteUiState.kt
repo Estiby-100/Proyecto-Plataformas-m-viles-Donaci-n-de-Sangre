@@ -7,6 +7,8 @@ data class RegistroDonanteUiState(
     val ciudadOZona: String = "",
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    /** true cuando el perfil de donante quedó guardado; la vista navega al Home. */
+    val perfilCompleto: Boolean = false,
 ) {
     val isContinueEnabled: Boolean
         get() = ciudadOZona.isNotBlank() && !isLoading
@@ -21,4 +23,5 @@ sealed interface RegistroDonanteEvent {
     ) : RegistroDonanteEvent
     data object Continue : RegistroDonanteEvent
     data object Back : RegistroDonanteEvent
+    data object NavegacionAtendida : RegistroDonanteEvent
 }

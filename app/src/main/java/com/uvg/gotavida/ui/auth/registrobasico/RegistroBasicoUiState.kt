@@ -1,6 +1,10 @@
 package com.uvg.gotavida.ui.auth.registrobasico
 
+import com.uvg.gotavida.data.model.RolCuenta
+
 data class RegistroBasicoUiState(
+    /** Rol elegido en Splash; llega como argumento de navegación. */
+    val rol: RolCuenta = RolCuenta.DONANTE,
     val nombreCompleto: String = "",
     val email: String = "",
     val password: String = "",
@@ -10,6 +14,8 @@ data class RegistroBasicoUiState(
     val acceptedTerms: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    /** true cuando la cuenta ya se creó; la vista navega al siguiente paso. */
+    val cuentaCreada: Boolean = false,
 ) {
     val isContinueEnabled: Boolean
         get() = nombreCompleto.isNotBlank() &&
@@ -21,6 +27,9 @@ data class RegistroBasicoUiState(
 }
 
 sealed interface RegistroBasicoEvent {
+    data class RolAsignado(
+        val rol: RolCuenta
+    ) : RegistroBasicoEvent
     data class NombreChanged(
         val nombre: String
     ) : RegistroBasicoEvent
@@ -40,4 +49,5 @@ sealed interface RegistroBasicoEvent {
     data object Back : RegistroBasicoEvent
     data object OpenTerms : RegistroBasicoEvent
     data object OpenPrivacy : RegistroBasicoEvent
+    data object NavegacionAtendida : RegistroBasicoEvent
 }

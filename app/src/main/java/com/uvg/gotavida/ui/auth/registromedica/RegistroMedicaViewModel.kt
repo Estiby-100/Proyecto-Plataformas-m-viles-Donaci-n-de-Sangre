@@ -1,54 +1,76 @@
 package com.uvg.gotavida.ui.auth.registromedica
 
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewModelScope
+import com.uvg.gotavida.data.auth.AuthResult
+import com.uvg.gotavida.data.auth.CuentaRepository
+import com.uvg.gotavida.di.ServiceLocator
+import com.uvg.gotavida.ui.auth.aMensaje
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class RegistroMedicaViewModel : ViewModel() {
+class RegistroMedicaViewModel(
+    private val cuentas: CuentaRepository = ServiceLocator.cuentaRepository,
+) : ViewModel() {
 
-    var state by mutableStateOf(
-        RegistroMedicaUiState()
-    )
-        private set
+    private val _state = MutableStateFlow(RegistroMedicaUiState())
+    val state: StateFlow<RegistroMedicaUiState> = _state.asStateFlow()
 
     fun onEvent(event: RegistroMedicaEvent) {
 
         when (event) {
 
             is RegistroMedicaEvent.Institucion -> {
-
-                state = state.copy(
-                    nombreInstitucion = event.nombre,
-                    errorMessage = null
-                )
+                _state.update { it.copy(nombreInstitucion = event.nombre, errorMessage = null) }
             }
 
             is RegistroMedicaEvent.Correo -> {
-
-                state = state.copy(
-                    correoInstitucional = event.correo,
-                    errorMessage = null
-                )
+                _state.update { it.copy(correoInstitucional = event.correo, errorMessage = null) }
             }
 
             is RegistroMedicaEvent.NumeroColegiado -> {
-
-                state = state.copy(
-                    numeroColegiado = event.numero
-                )
+                _state.update { it.copy(numeroColegiado = event.numero) }
             }
 
-            RegistroMedicaEvent.Enviar -> {
+            RegistroMedicaEvent.Enviar -> enviarARevision()
 
-                state = state.copy(
-                    fase = RegistroMedicaFase.EN_REVISION
-                )
+            RegistroMedicaEvent.Inicio -> {
+                // La cuenta queda en revisión: se cierra la sesión y se vuelve a Splash.
+                // Al dashboard médico solo se entra iniciando sesión.
+                cuentas.cerrarSesion()
+                _state.update { it.copy(volverAlInicio = true) }
+            }
+
+            RegistroMedicaEvent.NavegacionAtendida -> {
+                _state.update { it.copy(volverAlInicio = false) }
             }
 
             RegistroMedicaEvent.Back -> Unit
+        }
+    }
 
-            RegistroMedicaEvent.Inicio -> Unit
+    private fun enviarARevision() {
+        val actual = _state.value
+        if (!actual.isContinueEnabled) return
+
+        _state.update { it.copy(isLoading = true, errorMessage = null) }
+
+        viewModelScope.launch {
+            val resultado = cuentas.completarPerfilMedica(
+                institucion = actual.nombreInstitucion,
+                numeroColegiado = actual.numeroColegiado,
+            )
+            when (resultado) {
+                is AuthResult.Exito -> _state.update {
+                    it.copy(isLoading = false, fase = RegistroMedicaFase.EN_REVISION)
+                }
+                is AuthResult.Fallo -> _state.update {
+                    it.copy(isLoading = false, errorMessage = resultado.error.aMensaje())
+                }
+            }
         }
     }
 }

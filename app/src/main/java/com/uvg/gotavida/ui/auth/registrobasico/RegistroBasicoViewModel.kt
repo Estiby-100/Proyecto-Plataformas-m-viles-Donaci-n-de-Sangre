@@ -1,85 +1,98 @@
 package com.uvg.gotavida.ui.auth.registrobasico
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewModelScope
+import com.uvg.gotavida.data.auth.AuthResult
+import com.uvg.gotavida.data.auth.CuentaRepository
+import com.uvg.gotavida.di.ServiceLocator
+import com.uvg.gotavida.ui.auth.aMensaje
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class RegistroBasicoViewModel : ViewModel() {
+class RegistroBasicoViewModel(
+    private val cuentas: CuentaRepository = ServiceLocator.cuentaRepository,
+) : ViewModel() {
 
-    var state by mutableStateOf(
-        RegistroBasicoUiState()
-    )
-        private set
+    private val _state = MutableStateFlow(RegistroBasicoUiState())
+    val state: StateFlow<RegistroBasicoUiState> = _state.asStateFlow()
 
     fun onEvent(event: RegistroBasicoEvent) {
 
         when (event) {
 
-            is RegistroBasicoEvent.NombreChanged -> {
+            is RegistroBasicoEvent.RolAsignado -> {
+                _state.update { it.copy(rol = event.rol) }
+            }
 
-                state = state.copy(
-                    nombreCompleto = event.nombre
-                )
+            is RegistroBasicoEvent.NombreChanged -> {
+                _state.update { it.copy(nombreCompleto = event.nombre) }
             }
 
             is RegistroBasicoEvent.EmailChanged -> {
-
-                state = state.copy(
-                    email = event.email
-                )
+                _state.update { it.copy(email = event.email, errorMessage = null) }
             }
 
             is RegistroBasicoEvent.PasswordChanged -> {
-
-                state = state.copy(
-                    password = event.password
-                )
+                _state.update { it.copy(password = event.password, errorMessage = null) }
             }
 
             is RegistroBasicoEvent.Confirm -> {
-
-                state = state.copy(
-                    confirmPassword = event.password
-                )
+                _state.update { it.copy(confirmPassword = event.password, errorMessage = null) }
             }
 
             RegistroBasicoEvent.Toggle -> {
-
-                state = state.copy(
-                    passwordVisible = !state.passwordVisible
-                )
+                _state.update { it.copy(passwordVisible = !it.passwordVisible) }
             }
 
             RegistroBasicoEvent.ToggleConfirm -> {
-
-                state = state.copy(
-                    confirmPasswordVisible =
-                        !state.confirmPasswordVisible
-                )
+                _state.update { it.copy(confirmPasswordVisible = !it.confirmPasswordVisible) }
             }
 
             RegistroBasicoEvent.ToggleAcceptedTerms -> {
-
-                state = state.copy(
-                    acceptedTerms = !state.acceptedTerms
-                )
+                _state.update { it.copy(acceptedTerms = !it.acceptedTerms) }
             }
 
-            RegistroBasicoEvent.Continue -> {
+            RegistroBasicoEvent.Continue -> crearCuenta()
 
-                if (state.password != state.confirmPassword) {
-
-                    state = state.copy(
-                        errorMessage =
-                            "Las contraseñas no coinciden"
-                    )
-                }
+            RegistroBasicoEvent.NavegacionAtendida -> {
+                _state.update { it.copy(cuentaCreada = false) }
             }
 
             RegistroBasicoEvent.Back -> Unit
             RegistroBasicoEvent.OpenTerms -> Unit
             RegistroBasicoEvent.OpenPrivacy -> Unit
+        }
+    }
+
+    private fun crearCuenta() {
+        val actual = _state.value
+        if (!actual.isContinueEnabled) return
+
+        if (actual.password != actual.confirmPassword) {
+            _state.update { it.copy(errorMessage = "Las contraseñas no coinciden") }
+            return
+        }
+
+        _state.update { it.copy(isLoading = true, errorMessage = null) }
+
+        viewModelScope.launch {
+            val resultado = cuentas.registrarCuenta(
+                nombre = actual.nombreCompleto,
+                correo = actual.email,
+                contrasena = actual.password,
+                rol = actual.rol,
+            )
+            when (resultado) {
+                is AuthResult.Exito -> _state.update {
+                    it.copy(isLoading = false, cuentaCreada = true)
+                }
+                is AuthResult.Fallo -> _state.update {
+                    it.copy(isLoading = false, errorMessage = resultado.error.aMensaje())
+                }
+            }
         }
     }
 }

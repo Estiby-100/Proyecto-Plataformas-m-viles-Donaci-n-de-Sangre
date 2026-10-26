@@ -1,18 +1,27 @@
 package com.uvg.gotavida.ui.auth.login
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.gotavida.data.model.RolCuenta
 
 @Composable
 fun LoginRoute(
+    onLoginExitoso: (RolCuenta) -> Unit,
+    onBackClick: () -> Unit,
+    onRegisterClick: () -> Unit,
     viewModel: LoginViewModel = viewModel()
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(state.rolAutenticado) {
+        val rol = state.rolAutenticado ?: return@LaunchedEffect
+        viewModel.onEvent(LoginEvent.NavegacionAtendida)
+        onLoginExitoso(rol)
+    }
 
     LoginScreen(
         uiState = state,
@@ -51,12 +60,14 @@ fun LoginRoute(
             viewModel.onEvent(
                 LoginEvent.Back
             )
+            onBackClick()
         },
 
         onRegisterClick = {
             viewModel.onEvent(
                 LoginEvent.Register
             )
+            onRegisterClick()
         }
     )
 }
