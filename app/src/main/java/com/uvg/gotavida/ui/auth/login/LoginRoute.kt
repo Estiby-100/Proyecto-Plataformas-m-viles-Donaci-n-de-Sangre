@@ -1,5 +1,7 @@
 package com.uvg.gotavida.ui.auth.login
 
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,6 +26,7 @@ fun LoginRoute(
     }
 
     LoginScreen(
+        modifier = Modifier.systemBarsPadding(),
         uiState = state,
 
         onEmailChange = {

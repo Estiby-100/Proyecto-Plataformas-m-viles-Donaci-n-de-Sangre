@@ -1,5 +1,7 @@
 package com.uvg.gotavida.ui.auth.registrobasico
 
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,6 +30,8 @@ fun RegistroBasicoRoute(
     }
 
     RegistroBasicoScreen(
+
+        modifier = Modifier.systemBarsPadding(),
 
         uiState = state,
 

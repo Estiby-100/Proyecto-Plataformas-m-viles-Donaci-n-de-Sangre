@@ -1,5 +1,7 @@
 package com.uvg.gotavida.ui.auth.registromedica
 
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,6 +23,7 @@ fun RegistroMedicaRoute(
     }
 
     RegistroMedicaScreen(
+        modifier = Modifier.systemBarsPadding(),
         uiState = uiState,
         onNombreInstitucionChange = { viewModel.onEvent(RegistroMedicaEvent.Institucion(it)) },
         onCorreoInstitucionalChange = { viewModel.onEvent(RegistroMedicaEvent.Correo(it)) },

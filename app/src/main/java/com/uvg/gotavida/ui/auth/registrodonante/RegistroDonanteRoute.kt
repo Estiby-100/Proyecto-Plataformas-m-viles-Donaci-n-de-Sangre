@@ -1,5 +1,7 @@
 package com.uvg.gotavida.ui.auth.registrodonante
 
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,6 +24,8 @@ fun RegistroDonanteRoute(
     }
 
     RegistroDonanteScreen(
+
+        modifier = Modifier.systemBarsPadding(),
 
         uiState = state,
 
