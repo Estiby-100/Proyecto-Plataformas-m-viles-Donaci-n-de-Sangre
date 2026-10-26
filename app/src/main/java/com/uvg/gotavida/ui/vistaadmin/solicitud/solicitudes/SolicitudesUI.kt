@@ -1,6 +1,6 @@
 package com.uvg.gotavida.ui.vistaadmin.solicitud.solicitudes
 
-import com.uvg.gotavida.vistaadmin.solicitud.solicitudes.SolicitudCreada
+import com.uvg.gotavida.data.model.SolicitudCreada
 
 data class SolicitudesState(
     val cargando: Boolean = true,

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import com.uvg.gotavida.data.model.SolicitudCreada
 import com.uvg.gotavida.ui.vistaadmin.solicitud.solicitudes.SolicitudesCreadasEvent
 import com.uvg.gotavida.ui.vistaadmin.solicitud.solicitudes.SolicitudesViewModel
 import androidx.compose.foundation.verticalScroll
@@ -27,12 +28,6 @@ import com.uvg.gotavida.ui.theme.CoralAction
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import com.uvg.gotavida.ui.theme.SuccessAccessible
 import androidx.lifecycle.viewmodel.compose.viewModel
-
-data class SolicitudCreada(
-    val nombre: String,
-    val ubicacion: String,
-    val tipoSangre: String
-)
 
 @Composable
 fun SolicitudesScreen(

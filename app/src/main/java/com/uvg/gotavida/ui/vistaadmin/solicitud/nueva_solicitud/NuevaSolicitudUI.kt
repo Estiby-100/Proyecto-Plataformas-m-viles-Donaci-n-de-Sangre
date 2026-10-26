@@ -5,7 +5,10 @@ data class NuevaSolicitudState(
     val tipoSangre: String = "",
     val signo: String = "",
     val departamento: String = "",
-    val detalles: String = ""
+    val detalles: String = "",
+    val errorMessage: String? = null,
+    /** true cuando la solicitud ya se guardó; la vista navega a la lista. */
+    val enviada: Boolean = false
 )
 
 sealed interface NuevaSolicitudEvent {
@@ -33,4 +36,6 @@ sealed interface NuevaSolicitudEvent {
     data object EnviarSolicitud : NuevaSolicitudEvent
 
     data object BackClick : NuevaSolicitudEvent
+
+    data object NavegacionAtendida : NuevaSolicitudEvent
 }

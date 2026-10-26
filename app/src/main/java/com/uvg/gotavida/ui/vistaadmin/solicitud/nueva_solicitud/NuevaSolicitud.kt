@@ -28,6 +28,12 @@ fun NuevaSolicitud(
 
     val state by viewModel.state.collectAsState()
 
+    LaunchedEffect(state.enviada) {
+        if (!state.enviada) return@LaunchedEffect
+        viewModel.onEvent(NuevaSolicitudEvent.NavegacionAtendida)
+        onEnviarClick(state)
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -193,15 +199,20 @@ fun NuevaSolicitud(
                 modifier = Modifier.height(24.dp)
             )
 
+            state.errorMessage?.let { mensaje ->
+                Text(
+                    text = mensaje,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+            }
+
             Button(
                 onClick = {
-
                     viewModel.onEvent(
                         NuevaSolicitudEvent.EnviarSolicitud
                     )
-
-                    onEnviarClick(state)
-
                 },
                 shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.buttonColors(
