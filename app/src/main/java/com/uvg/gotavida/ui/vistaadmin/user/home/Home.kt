@@ -126,7 +126,7 @@ fun Header(
         Spacer(modifier = Modifier.weight(1f))
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text = "¡Hola, $userName!",
+                text = if (userName.isBlank()) "¡Hola!" else "¡Hola, $userName!",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onPrimary

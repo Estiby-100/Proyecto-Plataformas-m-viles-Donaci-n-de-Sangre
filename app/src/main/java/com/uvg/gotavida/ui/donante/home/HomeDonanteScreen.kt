@@ -82,6 +82,7 @@ fun HomeDonanteRoute(
         filtroSeleccionado = state.filtroSeleccionado,
         solicitudesUrgentes = state.urgentes,
         jornadas = state.jornadas,
+        nombre = state.nombre,
 
         onDisponibleChange = {
             viewModel.onEvent(
@@ -130,13 +131,18 @@ fun HomeDonanteScreen(
     onNotificacionesClick: () -> Unit,
     tabSeleccionado: DonanteTab,
     onTabSeleccionado: (DonanteTab) -> Unit,
+    nombre: String = "",
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text("Hola, Esteban") },
+                title = {
+                    // Solo el primer nombre, para que el saludo no se desborde.
+                    val primerNombre = nombre.trim().substringBefore(' ')
+                    Text(if (primerNombre.isEmpty()) "Hola" else "Hola, $primerNombre")
+                },
                 actions = {
                     IconButton(onClick = onNotificacionesClick) {
                         BadgedBox(badge = { Badge() }) {

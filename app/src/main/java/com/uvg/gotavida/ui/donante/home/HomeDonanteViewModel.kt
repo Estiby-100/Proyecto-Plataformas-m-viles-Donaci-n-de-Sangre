@@ -1,11 +1,14 @@
 package com.uvg.gotavida.ui.donante.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.uvg.gotavida.data.fake.FakeSolicitudesDataSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import com.uvg.gotavida.di.ServiceLocator
 
 class HomeDonanteViewModel : ViewModel() {
 
@@ -14,6 +17,20 @@ class HomeDonanteViewModel : ViewModel() {
 
     init {
         cargarFeed()
+        cargarNombre()
+    }
+
+    /**
+     * Lee el perfil guardado en Room para saludar con el nombre real.
+     * runCatching evita que el @Preview falle, porque ahí no existe Room.
+     */
+    private fun cargarNombre() {
+        viewModelScope.launch {
+            val usuario = runCatching { ServiceLocator.cuentaRepository.sesionActual() }.getOrNull()
+            if (usuario != null) {
+                _state.update { it.copy(nombre = usuario.nombre) }
+            }
+        }
     }
 
     fun onEvent(event: HomeDonanteEvent) {

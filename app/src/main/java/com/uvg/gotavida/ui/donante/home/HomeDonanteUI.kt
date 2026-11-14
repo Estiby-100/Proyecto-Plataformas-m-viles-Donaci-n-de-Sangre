@@ -4,6 +4,7 @@ import com.uvg.gotavida.data.model.SolicitudDonacion
 
 data class HomeDonanteState(
     val estado: EstadoFeed = EstadoFeed.CARGANDO,
+    val nombre: String = "",
     val disponible: Boolean = true,
     val filtroSeleccionado: FiltroFeed = FiltroFeed.TODAS,
     val urgentes: List<SolicitudDonacion> = emptyList(),

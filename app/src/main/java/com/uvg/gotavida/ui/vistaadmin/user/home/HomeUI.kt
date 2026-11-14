@@ -2,7 +2,7 @@ package com.uvg.gotavida.ui.vistaadmin.user.home
 
 data class HomeState(
 
-    val userName: String = "Administrador",
+    val userName: String = "",
 
     val location: String = "Guatemala",
 

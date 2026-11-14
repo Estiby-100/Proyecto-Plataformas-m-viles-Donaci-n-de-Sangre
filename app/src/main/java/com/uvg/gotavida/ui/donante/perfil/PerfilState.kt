@@ -4,8 +4,8 @@ import com.uvg.gotavida.data.model.Insignia
 import com.uvg.gotavida.data.model.ItemHistorial
 
 data class PerfilState(
-    val nombre: String = "Esteban Sánchez",
-    val sangre: String = "O+",
+    val nombre: String = "",
+    val sangre: String = "",
     val disponible: Boolean = true,
     val historial: List<ItemHistorial> = emptyList(),
     val insignias: List<Insignia> = emptyList(),
