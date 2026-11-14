@@ -66,7 +66,11 @@ fun SolicitudCard(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "${solicitud.distanciaKm} km · ${solicitud.vigenciaTexto}",
+                text = if (solicitud.distanciaKm > 0.0) {
+                    "${solicitud.distanciaKm} km · ${solicitud.vigenciaTexto}"
+                } else {
+                    solicitud.vigenciaTexto
+                },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

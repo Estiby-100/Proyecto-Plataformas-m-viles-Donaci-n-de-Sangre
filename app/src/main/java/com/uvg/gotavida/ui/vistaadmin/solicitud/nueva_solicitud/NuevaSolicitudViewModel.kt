@@ -1,12 +1,13 @@
 package com.uvg.gotavida.ui.vistaadmin.solicitud.nueva_solicitud
 
 import androidx.lifecycle.ViewModel
-import com.uvg.gotavida.data.fake.SolicitudesCreadasStore
-import com.uvg.gotavida.data.model.SolicitudCreada
+import androidx.lifecycle.viewModelScope
+import com.uvg.gotavida.di.ServiceLocator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class NuevaSolicitudViewModel : ViewModel() {
 
@@ -50,6 +51,8 @@ class NuevaSolicitudViewModel : ViewModel() {
     private fun enviar() {
         val actual = _state.value
 
+        if (actual.enviando) return
+
         val faltaAlgo = actual.nombreCompleto.isBlank() ||
             actual.tipoSangre.isBlank() ||
             actual.signo.isBlank() ||
@@ -62,13 +65,33 @@ class NuevaSolicitudViewModel : ViewModel() {
             return
         }
 
-        SolicitudesCreadasStore.agregar(
-            SolicitudCreada(
-                nombre = actual.nombreCompleto.trim(),
-                ubicacion = actual.departamento,
-                tipoSangre = actual.tipoSangre + actual.signo
-            )
-        )
-        _state.update { it.copy(enviada = true) }
+        _state.update { it.copy(enviando = true, errorMessage = null) }
+
+        viewModelScope.launch {
+            val resultado = runCatching {
+                val usuario = ServiceLocator.cuentaRepository.sesionActual()
+                    ?: error("No hay sesión iniciada")
+                ServiceLocator.solicitudesRepository.crear(
+                    medicaUid = usuario.uid,
+                    // La institución sale del perfil de la médica, no se vuelve a escribir.
+                    institucion = usuario.institucion ?: usuario.nombre,
+                    nombrePaciente = actual.nombreCompleto.trim(),
+                    zona = actual.departamento,
+                    tipoSangre = actual.tipoSangre + actual.signo,
+                    detalles = actual.detalles.trim(),
+                )
+            }
+
+            if (resultado.isSuccess) {
+                _state.update { it.copy(enviando = false, enviada = true) }
+            } else {
+                _state.update {
+                    it.copy(
+                        enviando = false,
+                        errorMessage = "No se pudo enviar la solicitud. Revisa tu conexión e inténtalo de nuevo."
+                    )
+                }
+            }
+        }
     }
 }

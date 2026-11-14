@@ -1,6 +1,9 @@
 package com.uvg.gotavida.ui.donante.confirmacion
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.uvg.gotavida.di.ServiceLocator
+import kotlinx.coroutines.launch
 import com.uvg.gotavida.data.fake.FakeSolicitudesDataSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,12 +20,7 @@ class ConfirmacionViewModel : ViewModel() {
         when (event) {
 
             is ConfirmacionEvent.Cargar -> {
-                _state.update {
-                    it.copy(
-                        solicitud = FakeSolicitudesDataSource
-                            .obtenerSolicitudPorId(event.solicitudId)
-                    )
-                }
+                cargarSolicitud(event.solicitudId)
             }
 
             ConfirmacionEvent.MostrarContacto -> {
@@ -49,6 +47,15 @@ class ConfirmacionViewModel : ViewModel() {
             ConfirmacionEvent.Mapa -> Unit
             ConfirmacionEvent.Llamar -> Unit
             ConfirmacionEvent.Entendido -> Unit
+        }
+    }
+
+    /** Primero busca entre los datos de ejemplo (jornadas) y si no, en Firestore. */
+    private fun cargarSolicitud(id: String) {
+        viewModelScope.launch {
+            val solicitud = FakeSolicitudesDataSource.obtenerSolicitudPorId(id)
+                ?: runCatching { ServiceLocator.solicitudesRepository.obtenerPorId(id) }.getOrNull()
+            _state.update { it.copy(solicitud = solicitud) }
         }
     }
 }

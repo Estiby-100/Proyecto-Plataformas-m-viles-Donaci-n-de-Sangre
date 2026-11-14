@@ -7,6 +7,8 @@ data class NuevaSolicitudState(
     val departamento: String = "",
     val detalles: String = "",
     val errorMessage: String? = null,
+    /** true mientras se guarda en Firestore, para no enviar dos veces. */
+    val enviando: Boolean = false,
     /** true cuando la solicitud ya se guardó; la vista navega a la lista. */
     val enviada: Boolean = false
 )

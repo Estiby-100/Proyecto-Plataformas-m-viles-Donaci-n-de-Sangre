@@ -2,11 +2,11 @@ package com.uvg.gotavida.ui.vistaadmin.user.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uvg.gotavida.data.fake.SolicitudesCreadasStore
 import com.uvg.gotavida.di.ServiceLocator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -24,10 +24,14 @@ class HomeViewModel : ViewModel() {
             }
         }
 
-        // El contador del dashboard sigue a las solicitudes activas.
+        // El contador del dashboard sigue a las solicitudes activas de esta médica.
         viewModelScope.launch {
-            SolicitudesCreadasStore.solicitudes.collect { lista ->
-                _state.update { it.copy(requestCount = lista.size) }
+            val uid = runCatching { ServiceLocator.authRepository.uidActual }.getOrNull()
+            val repositorio = runCatching { ServiceLocator.solicitudesRepository }.getOrNull()
+            if (uid != null && repositorio != null) {
+                repositorio.observarDeMedica(uid)
+                    .catch { }
+                    .collect { lista -> _state.update { it.copy(requestCount = lista.size) } }
             }
         }
     }

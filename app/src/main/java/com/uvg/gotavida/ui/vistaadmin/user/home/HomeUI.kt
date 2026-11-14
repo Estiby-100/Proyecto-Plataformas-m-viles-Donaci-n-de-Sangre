@@ -6,7 +6,7 @@ data class HomeState(
 
     val location: String = "Guatemala",
 
-    val requestCount: Int = 4,
+    val requestCount: Int = 0,
 
     val bloodTypes: List<BloodType> = listOf(
 

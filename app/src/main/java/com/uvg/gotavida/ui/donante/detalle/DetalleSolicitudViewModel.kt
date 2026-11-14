@@ -1,6 +1,9 @@
 package com.uvg.gotavida.ui.donante.detalle
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.uvg.gotavida.di.ServiceLocator
+import kotlinx.coroutines.launch
 import com.uvg.gotavida.data.fake.FakeSolicitudesDataSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,12 +20,7 @@ class DetalleSolicitudViewModel : ViewModel() {
         when (event) {
 
             is DetalleSolicitudEvent.Cargar -> {
-                _state.update {
-                    it.copy(
-                        solicitud = FakeSolicitudesDataSource
-                            .obtenerSolicitudPorId(event.solicitudId)
-                    )
-                }
+                cargarSolicitud(event.solicitudId)
             }
 
             DetalleSolicitudEvent.DialogoRechazo -> {
@@ -41,6 +39,15 @@ class DetalleSolicitudViewModel : ViewModel() {
             DetalleSolicitudEvent.Donar -> Unit
             DetalleSolicitudEvent.Mapa -> Unit
             DetalleSolicitudEvent.Atras -> Unit
+        }
+    }
+
+    /** Primero busca entre los datos de ejemplo (jornadas) y si no, en Firestore. */
+    private fun cargarSolicitud(id: String) {
+        viewModelScope.launch {
+            val solicitud = FakeSolicitudesDataSource.obtenerSolicitudPorId(id)
+                ?: runCatching { ServiceLocator.solicitudesRepository.obtenerPorId(id) }.getOrNull()
+            _state.update { it.copy(solicitud = solicitud) }
         }
     }
 }

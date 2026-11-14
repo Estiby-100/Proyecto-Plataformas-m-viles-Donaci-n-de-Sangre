@@ -5,6 +5,7 @@ import com.uvg.gotavida.data.auth.AuthRepository
 import com.uvg.gotavida.data.auth.CuentaRepository
 import com.uvg.gotavida.data.local.AppDatabase
 import com.uvg.gotavida.data.local.UsuarioRepository
+import com.uvg.gotavida.data.remote.SolicitudesRepository
 
 /**
  * Punto único donde se crean las dependencias del app. Se inicializa una vez
@@ -25,6 +26,8 @@ object ServiceLocator {
     val cuentaRepository: CuentaRepository by lazy {
         CuentaRepository(authRepository, usuarioRepository)
     }
+
+    val solicitudesRepository: SolicitudesRepository by lazy { SolicitudesRepository() }
 
     fun init(context: Context) {
         database = AppDatabase.crear(context)

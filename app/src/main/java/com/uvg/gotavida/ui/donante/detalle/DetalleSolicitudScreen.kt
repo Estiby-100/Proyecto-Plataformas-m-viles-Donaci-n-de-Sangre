@@ -191,7 +191,11 @@ fun DetalleSolicitudScreen(
                     Column(modifier = Modifier.padding(16.dp)) {
                         FilaConIcono(
                             icono = Icons.Filled.LocationOn,
-                            texto = "A ${solicitud.distanciaKm} km de ti"
+                            texto = if (solicitud.distanciaKm > 0.0) {
+                                "A ${solicitud.distanciaKm} km de ti"
+                            } else {
+                                solicitud.direccion
+                            }
                         )
                         TextButton(onClick = onVerEnMapaClick) {
                             Text("Ver en mapa")
