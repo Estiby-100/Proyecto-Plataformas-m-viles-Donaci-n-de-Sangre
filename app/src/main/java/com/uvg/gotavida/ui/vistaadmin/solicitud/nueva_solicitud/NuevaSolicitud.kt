@@ -83,10 +83,42 @@ fun NuevaSolicitud(
             InfoBanner()
 
             Spacer(
-                modifier = Modifier.height(20.dp)
+                modifier = Modifier.height(16.dp)
             )
 
-            FormLabel("Nombre completo")
+            FormLabel("Tipo de publicación")
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                FilterChip(
+                    selected = state.tipoPublicacion == com.uvg.gotavida.data.model.TipoPublicacion.SOLICITUD_SANGRE,
+                    onClick = {
+                        viewModel.onEvent(
+                            NuevaSolicitudEvent.TipoPublicacionChanged(com.uvg.gotavida.data.model.TipoPublicacion.SOLICITUD_SANGRE)
+                        )
+                    },
+                    label = { Text("Solicitud de Sangre") },
+                    modifier = Modifier.weight(1f)
+                )
+                FilterChip(
+                    selected = state.tipoPublicacion == com.uvg.gotavida.data.model.TipoPublicacion.JORNADA,
+                    onClick = {
+                        viewModel.onEvent(
+                            NuevaSolicitudEvent.TipoPublicacionChanged(com.uvg.gotavida.data.model.TipoPublicacion.JORNADA)
+                        )
+                    },
+                    label = { Text("Jornada de Donación") },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            FormLabel("Nombre completo / Paciente")
 
             FormTextField(
                 value = state.nombreCompleto,

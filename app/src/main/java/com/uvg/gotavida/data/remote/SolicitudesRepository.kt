@@ -80,6 +80,7 @@ class SolicitudesRepository {
         zona: String,
         tipoSangre: String,
         detalles: String,
+        tipoPublicacion: TipoPublicacion = TipoPublicacion.SOLICITUD_SANGRE
     ) {
         // Si la institución está en nuestra lista de hospitales, usamos su dirección.
         val hospital = FakeHospitalesDataSource.buscar(institucion).firstOrNull()
@@ -90,6 +91,7 @@ class SolicitudesRepository {
             "zona" to zona,
             "tipoSangre" to tipoSangre,
             "detalles" to detalles,
+            "tipoPublicacion" to tipoPublicacion.name,
             "direccion" to (hospital?.ubicacion ?: zona),
             CAMPO_ESTADO to EstadoSolicitud.ACTIVA.name,
             "creadaEn" to FieldValue.serverTimestamp(),
@@ -112,6 +114,7 @@ class SolicitudesRepository {
 
     private fun DocumentSnapshot.aSolicitudDonacion(): SolicitudDonacion? {
         if (!exists()) return null
+        val tipoString = getString("tipoPublicacion") ?: TipoPublicacion.SOLICITUD_SANGRE.name
         return SolicitudDonacion(
             id = id,
             institucion = getString("institucion") ?: return null,
@@ -119,7 +122,7 @@ class SolicitudesRepository {
             institucionVerificada = false,
             zona = getString("zona").orEmpty(),
             tipoSangre = getString("tipoSangre") ?: return null,
-            tipoPublicacion = TipoPublicacion.SOLICITUD_SANGRE,
+            tipoPublicacion = TipoPublicacion.valueOf(tipoString),
             urgencia = NivelUrgencia.URGENTE,
             // No calculamos distancia real; 0.0 significa "sin dato" y la pantalla no la muestra.
             distanciaKm = 0.0,

@@ -82,18 +82,18 @@ class HomeDonanteViewModel : ViewModel() {
 
     private fun cargarFeed() {
 
-        val solicitudes = solicitudesRemotas
+        val (solicitudesReales, jornadasReales) = solicitudesRemotas.partition {
+            it.tipoPublicacion == com.uvg.gotavida.data.model.TipoPublicacion.SOLICITUD_SANGRE
+        }
 
-        val jornadas =
-            FakeSolicitudesDataSource
-                .obtenerJornadasCercanas()
+        val jornadas = jornadasReales + FakeSolicitudesDataSource.obtenerJornadasCercanas()
 
         _state.update { actual ->
 
             val solicitudesAMostrar =
                 when (actual.filtroSeleccionado) {
                     FiltroFeed.JORNADAS -> emptyList()
-                    else -> solicitudes
+                    else -> solicitudesReales
                 }
 
             val jornadasAMostrar =

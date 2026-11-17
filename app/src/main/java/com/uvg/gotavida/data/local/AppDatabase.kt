@@ -6,13 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [UsuarioEntity::class],
-    version = 1,
+    entities = [UsuarioEntity::class, NotificacionEntity::class],
+    version = 2,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun usuarioDao(): UsuarioDao
+    abstract fun notificacionDao(): NotificacionDao
 
     companion object {
         fun crear(context: Context): AppDatabase =
@@ -20,6 +21,8 @@ abstract class AppDatabase : RoomDatabase() {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "gotavida.db",
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
     }
 }

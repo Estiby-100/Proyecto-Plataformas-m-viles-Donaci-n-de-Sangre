@@ -4,8 +4,12 @@ import android.content.Context
 import com.uvg.gotavida.data.auth.AuthRepository
 import com.uvg.gotavida.data.auth.CuentaRepository
 import com.uvg.gotavida.data.local.AppDatabase
+import com.uvg.gotavida.data.local.NotificacionRepository
 import com.uvg.gotavida.data.local.UsuarioRepository
 import com.uvg.gotavida.data.remote.SolicitudesRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Punto único donde se crean las dependencias del app. Se inicializa una vez
@@ -21,6 +25,9 @@ object ServiceLocator {
     lateinit var usuarioRepository: UsuarioRepository
         private set
 
+    lateinit var notificacionRepository: NotificacionRepository
+        private set
+
     val authRepository: AuthRepository by lazy { AuthRepository() }
 
     val cuentaRepository: CuentaRepository by lazy {
@@ -32,5 +39,9 @@ object ServiceLocator {
     fun init(context: Context) {
         database = AppDatabase.crear(context)
         usuarioRepository = UsuarioRepository(database.usuarioDao())
+        notificacionRepository = NotificacionRepository(database.notificacionDao())
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching { notificacionRepository.inicializarSiEsNecesario() }
+        }
     }
 }

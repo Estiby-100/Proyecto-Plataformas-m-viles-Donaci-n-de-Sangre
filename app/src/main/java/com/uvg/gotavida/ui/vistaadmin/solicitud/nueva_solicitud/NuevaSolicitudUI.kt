@@ -1,11 +1,14 @@
 package com.uvg.gotavida.ui.vistaadmin.solicitud.nueva_solicitud
 
+import com.uvg.gotavida.data.model.TipoPublicacion
+
 data class NuevaSolicitudState(
     val nombreCompleto: String = "",
     val tipoSangre: String = "",
     val signo: String = "",
     val departamento: String = "",
     val detalles: String = "",
+    val tipoPublicacion: TipoPublicacion = TipoPublicacion.SOLICITUD_SANGRE,
     val errorMessage: String? = null,
     /** true mientras se guarda en Firestore, para no enviar dos veces. */
     val enviando: Boolean = false,
@@ -33,6 +36,10 @@ sealed interface NuevaSolicitudEvent {
 
     data class DetallesChanged(
         val detalles: String
+    ) : NuevaSolicitudEvent
+
+    data class TipoPublicacionChanged(
+        val tipo: TipoPublicacion
     ) : NuevaSolicitudEvent
 
     data object EnviarSolicitud : NuevaSolicitudEvent

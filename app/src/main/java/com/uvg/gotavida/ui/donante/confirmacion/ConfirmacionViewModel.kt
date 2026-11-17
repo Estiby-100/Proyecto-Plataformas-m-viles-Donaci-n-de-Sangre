@@ -40,6 +40,7 @@ class ConfirmacionViewModel : ViewModel() {
             }
 
             ConfirmacionEvent.Confirmar -> {
+                notificarAMedica()
                 _state.update { it.copy(mostrarDialogoCancelar = false) }
             }
 
@@ -56,6 +57,21 @@ class ConfirmacionViewModel : ViewModel() {
             val solicitud = FakeSolicitudesDataSource.obtenerSolicitudPorId(id)
                 ?: runCatching { ServiceLocator.solicitudesRepository.obtenerPorId(id) }.getOrNull()
             _state.update { it.copy(solicitud = solicitud) }
+        }
+    }
+
+    private fun notificarAMedica() {
+        viewModelScope.launch {
+            val sol = _state.value.solicitud ?: return@launch
+            val repo = runCatching { ServiceLocator.notificacionRepository }.getOrNull()
+            val titulo = "Un donante confirmó disponibilidad"
+            val subtitulo = "${sol.institucion} · Sangre ${sol.tipoSangre}"
+            repo?.agregar(
+                rol = com.uvg.gotavida.data.model.RolCuenta.MEDICA,
+                tipo = com.uvg.gotavida.data.model.NotificacionTipo.CONFIRMACION,
+                titulo = titulo,
+                subtitulo = subtitulo
+            )
         }
     }
 }

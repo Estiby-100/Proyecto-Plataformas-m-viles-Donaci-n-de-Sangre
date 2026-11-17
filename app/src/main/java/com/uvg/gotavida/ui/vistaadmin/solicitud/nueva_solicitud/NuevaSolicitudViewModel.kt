@@ -38,6 +38,10 @@ class NuevaSolicitudViewModel : ViewModel() {
                 _state.update { it.copy(detalles = event.detalles) }
             }
 
+            is NuevaSolicitudEvent.TipoPublicacionChanged -> {
+                _state.update { it.copy(tipoPublicacion = event.tipo) }
+            }
+
             NuevaSolicitudEvent.EnviarSolicitud -> enviar()
 
             NuevaSolicitudEvent.NavegacionAtendida -> {
@@ -79,6 +83,7 @@ class NuevaSolicitudViewModel : ViewModel() {
                     zona = actual.departamento,
                     tipoSangre = actual.tipoSangre + actual.signo,
                     detalles = actual.detalles.trim(),
+                    tipoPublicacion = actual.tipoPublicacion,
                 )
             }
 
