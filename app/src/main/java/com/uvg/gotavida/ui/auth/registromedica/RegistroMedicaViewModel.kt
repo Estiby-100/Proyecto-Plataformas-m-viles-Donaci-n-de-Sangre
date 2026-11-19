@@ -8,6 +8,7 @@ import com.uvg.gotavida.di.ServiceLocator
 import com.uvg.gotavida.ui.auth.aMensaje
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,6 +19,21 @@ class RegistroMedicaViewModel(
 
     private val _state = MutableStateFlow(RegistroMedicaUiState())
     val state: StateFlow<RegistroMedicaUiState> = _state.asStateFlow()
+
+    init {
+        // Hospitales desde Firestore. Si falla o la colección está vacía se queda la lista de
+        // respaldo. runCatching protege el @Preview, que no tiene Firebase.
+        viewModelScope.launch {
+            val repositorio = runCatching { ServiceLocator.institucionesRepository }.getOrNull()
+                ?: return@launch
+            repositorio.sembrarSiEstaVacia()
+            repositorio.observar()
+                .catch { }
+                .collect { lista ->
+                    if (lista.isNotEmpty()) _state.update { it.copy(instituciones = lista) }
+                }
+        }
+    }
 
     fun onEvent(event: RegistroMedicaEvent) {
 

@@ -52,6 +52,9 @@ import com.uvg.gotavida.data.fake.FakeLugaresDataSource
 import com.uvg.gotavida.data.model.LugarMapa
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 import androidx.compose.runtime.collectAsState
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.ui.platform.LocalContext
 
 private enum class VistaMapa { MAPA, LISTA }
 
@@ -147,8 +150,6 @@ fun MapaScreen(
                             onClick = { if (vistaLista) onCambiarVista() },
                             shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
                         ) {
-                            Icon(Icons.Filled.Map, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
                             Text("Mapa")
                         }
                         SegmentedButton(
@@ -156,12 +157,6 @@ fun MapaScreen(
                             onClick = { if (!vistaLista) onCambiarVista() },
                             shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.ListIcon,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
                             Text("Lista")
                         }
                     }
@@ -337,6 +332,8 @@ private fun HojaDetalleLugar(
     onCerrarClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.large,
@@ -368,15 +365,16 @@ private fun HojaDetalleLugar(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(12.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { }, shape = MaterialTheme.shapes.medium) {
-                    Text("Cómo llegar")
-                }
-                if (lugar.tieneSolicitudesActivas) {
-                    Button(onClick = { }, shape = MaterialTheme.shapes.medium) {
-                        Text("Ver solicitudes de este lugar")
-                    }
-                }
+            OutlinedButton(
+                onClick = {
+                    val consulta = Uri.encode("${lugar.nombre}, ${lugar.direccion}")
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=$consulta"))
+                    // Si el teléfono no tiene una app de mapas, no pasa nada en vez de cerrarse.
+                    runCatching { context.startActivity(intent) }
+                },
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Cómo llegar")
             }
         }
     }

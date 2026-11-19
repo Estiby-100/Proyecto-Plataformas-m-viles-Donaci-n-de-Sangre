@@ -117,6 +117,26 @@ private fun FormularioContent(
             label = "Nombre de la institución",
             enabled = !uiState.isLoading,
         )
+        // Sugerencias: tocar una rellena el campo con el nombre exacto del hospital.
+        uiState.sugerencias.forEach { inst ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onNombreInstitucionChange(inst.nombre) }
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+            ) {
+                Text(
+                    text = inst.nombre,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+                Text(
+                    text = inst.ubicacion,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
         Spacer(Modifier.height(16.dp))
         GotaVidaTextField(
             value = uiState.correoInstitucional,

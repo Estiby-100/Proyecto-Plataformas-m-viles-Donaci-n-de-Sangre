@@ -6,6 +6,7 @@ import com.uvg.gotavida.data.auth.CuentaRepository
 import com.uvg.gotavida.data.local.AppDatabase
 import com.uvg.gotavida.data.local.NotificacionRepository
 import com.uvg.gotavida.data.local.UsuarioRepository
+import com.uvg.gotavida.data.remote.InstitucionesRepository
 import com.uvg.gotavida.data.remote.SolicitudesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,8 @@ object ServiceLocator {
     }
 
     val solicitudesRepository: SolicitudesRepository by lazy { SolicitudesRepository() }
+
+    val institucionesRepository: InstitucionesRepository by lazy { InstitucionesRepository() }
 
     fun init(context: Context) {
         database = AppDatabase.crear(context)

@@ -3,7 +3,7 @@ package com.uvg.gotavida.data.remote
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.uvg.gotavida.data.fake.FakeHospitalesDataSource
+import com.uvg.gotavida.di.ServiceLocator
 import com.uvg.gotavida.data.model.NivelUrgencia
 import com.uvg.gotavida.data.model.SolicitudCreada
 import com.uvg.gotavida.data.model.SolicitudDonacion
@@ -82,8 +82,8 @@ class SolicitudesRepository {
         detalles: String,
         tipoPublicacion: TipoPublicacion = TipoPublicacion.SOLICITUD_SANGRE
     ) {
-        // Si la institución está en nuestra lista de hospitales, usamos su dirección.
-        val hospital = FakeHospitalesDataSource.buscar(institucion).firstOrNull()
+        // Si la institución está en la colección de hospitales, usamos su dirección.
+        val hospital = runCatching { ServiceLocator.institucionesRepository.buscarPorNombre(institucion) }.getOrNull()
         val datos = mapOf(
             CAMPO_MEDICA to medicaUid,
             "institucion" to institucion,
