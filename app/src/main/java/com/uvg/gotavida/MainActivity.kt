@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import com.uvg.gotavida.ui.navigation.AppNavHost
 import com.uvg.gotavida.ui.theme.GotaVidaTheme
 
+// Actividad principal que carga el tema de la app y arranca la navegación general.
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             GotaVidaTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
+                    // Carga el grafo de navegación completo
                     AppNavHost()
                 }
             }

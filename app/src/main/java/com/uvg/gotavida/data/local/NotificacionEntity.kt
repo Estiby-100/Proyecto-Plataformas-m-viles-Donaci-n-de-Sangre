@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
 
+// Entidad de Room para representar las notificaciones almacenadas en el teléfono.
 @Entity(tableName = "notificaciones")
 data class NotificacionEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),

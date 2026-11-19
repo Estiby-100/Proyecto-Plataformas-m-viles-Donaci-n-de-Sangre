@@ -7,10 +7,12 @@ import com.uvg.gotavida.data.model.RolCuenta
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+// Repositorio que administra las notificaciones persistentes en el teléfono.
 class NotificacionRepository(
     private val dao: NotificacionDao
 ) {
 
+    // Si la tabla está vacía, guarda datos iniciales de prueba para donante y médica
     suspend fun inicializarSiEsNecesario() {
         if (dao.contar() == 0) {
             val semillas = mutableListOf<NotificacionEntity>()
@@ -49,6 +51,7 @@ class NotificacionRepository(
         }
     }
 
+    // Retorna las notificaciones filtradas por el rol solicitado
     fun observarDe(rol: RolCuenta): Flow<List<Notificacion>> {
         return dao.observarPorRol(rol.name).map { lista ->
             lista.map { entity ->
@@ -64,6 +67,7 @@ class NotificacionRepository(
         }
     }
 
+    // Crea y guarda una nueva notificación en la base de datos local
     suspend fun agregar(
         rol: RolCuenta,
         tipo: NotificacionTipo,
@@ -83,10 +87,12 @@ class NotificacionRepository(
         dao.insertar(entity)
     }
 
+    // Cambia el estado de una notificación a leída
     suspend fun marcarLeida(id: String) {
         dao.marcarLeida(id)
     }
 
+    // Cambia el estado de todas las notificaciones del rol a leídas
     suspend fun marcarTodas(rol: RolCuenta) {
         dao.marcarTodasLeidas(rol.name)
     }
